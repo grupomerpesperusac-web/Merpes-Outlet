@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Merpes Outlet: catálogos de liquidación, socios, segunda selección y lenta rotación de Grupo Merpes Perú, con stock limitado.">
+<meta name="description" content="Merpes Outlet · Grupo Merpes Perú: productos nuevos a precio de liquidación. Stock limitado.">
 <meta property="og:title" content="Merpes Outlet · Grupo Merpes Perú">
 <meta property="og:description" content="Precios de outlet en tecnología, electrodomésticos y más. Stock limitado.">
 <meta property="og:type" content="website">
@@ -154,6 +154,18 @@ form.co{display:flex;flex-direction:column;gap:10px}
 @media (max-width:720px){.mbox{grid-template-columns:1fr}.modal{padding:0;place-items:end}.mbox{max-height:100vh;border-radius:12px 12px 0 0}}
 .toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:8px;z-index:40;font-weight:600;font-size:14px;max-width:calc(100% - 32px)}
 footer{color:var(--muted);font-size:12px;padding-block:0 30px}
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px;align-items:start}
+.lineas{position:sticky;top:150px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 170px);overflow:auto;margin-top:14px}
+.lineas h3{margin:2px 6px 6px;font-family:var(--f-display);font-size:18px}
+.lineas button{display:flex;justify-content:space-between;gap:8px;align-items:center;border:0;background:transparent;text-align:left;padding:7px 8px;border-radius:7px;cursor:pointer;font-size:13.5px;font-weight:600;color:var(--ink)}
+.lineas button b{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.lineas button:hover{background:var(--chip)}
+.lineas button[aria-pressed="true"]{background:var(--brand);color:#fff}.lineas button[aria-pressed="true"] b{color:#fff}
+.was{font-size:12px;color:var(--muted);text-decoration:line-through}
+@media (max-width:900px){.layout{grid-template-columns:1fr;gap:0}
+  .lineas{position:static;flex-direction:row;overflow-x:auto;max-height:none;padding:6px;gap:6px;scrollbar-width:none}
+  .lineas::-webkit-scrollbar{display:none}.lineas h3{display:none}
+  .lineas button{flex:0 0 auto;border:1px solid var(--line);white-space:nowrap}}
 @media (max-width:640px){
   .bar{flex-wrap:wrap;gap:8px 8px;padding-block:8px}.search{order:3;flex-basis:100%}
   .logo{flex:1;min-width:0;overflow:hidden}.logo b{font-size:19px}.logo span{font-size:8px}.brand{height:34px;padding:3px 5px}
@@ -184,10 +196,9 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     </div>
     <div class="filters">
       <div class="seg" role="group" aria-label="Condición">
-        <button type="button" data-cond="Liquidación" aria-pressed="true">Liquidación</button>
+        <button type="button" data-cond="Liquidación" aria-pressed="true">Nuevos en liquidación</button>
         <button type="button" data-cond="Socios" aria-pressed="false">Socios</button>
         <button type="button" data-cond="2da selección" aria-pressed="false">2da selección</button>
-        <button type="button" data-cond="Lenta rotación" aria-pressed="false">Lenta rotación</button>
       </div>
       <select id="cat" aria-label="Categoría"><option value="">Todas las categorías</option></select>
       <select id="sort" aria-label="Ordenar">
@@ -203,8 +214,8 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
 <main class="wrap">
   <section class="intro">
     <div>
-      <h1 id="introT">Catálogo de liquidación</h1>
-      <p id="introP">Productos nuevos de temporadas anteriores a precio de liquidación, stock limitado. Solo puedes pedir hasta las unidades disponibles.</p>
+      <h1 id="introT">Nuevos en liquidación</h1>
+      <p id="introP">Productos nuevos, en su empaque original, a precio de liquidación. Stock limitado.</p>
     </div>
     <span class="count" id="count">Cargando catálogo…</span>
   </section>
@@ -215,9 +226,14 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     <form id="lockF" class="lockf" novalidate><input id="lockK" type="password" autocomplete="off" placeholder="Clave de acceso" aria-label="Clave de acceso"><button class="btn primary" type="submit" id="lockB">Ingresar</button></form>
     <div class="err" id="lockE" hidden></div>
   </section>
-  <section class="grid" id="grid" aria-live="polite"></section>
-  <div class="more"><button class="btn" id="moreBtn" type="button" hidden>Ver más productos</button></div>
-  <footer>Precios en soles. En liquidación, socios y lenta rotación las imágenes son referenciales; en 2da selección las fotos son de la unidad publicada. Productos de liquidación sin cambio por precio de liquidación; garantía según producto. Las unidades se reservan por un plazo limitado hasta recibir el voucher de pago. Pagos solo a cuentas a nombre de Grupo Merpes Perú S.A.C. El producto se entrega con boleta o factura.</footer>
+  <div class="layout">
+    <aside class="lineas" id="lineas" aria-label="Líneas de producto"></aside>
+    <div class="main-col">
+      <section class="grid" id="grid" aria-live="polite"></section>
+      <div class="more"><button class="btn" id="moreBtn" type="button" hidden>Ver más productos</button></div>
+    </div>
+  </div>
+  <footer>Precios en soles, incluyen IGV. En Nuevos en liquidación y Socios las imágenes son referenciales; en 2da selección las fotos corresponden a la unidad publicada y esos productos no incluyen garantía. Despacho a domicilio con costo adicional por pedido; recojo en almacén sin costo. Las unidades se reservan por un plazo limitado hasta recibir el voucher de pago. Pagos solo a cuentas a nombre de Grupo Merpes Perú S.A.C. El producto se entrega con boleta o factura.</footer>
 </main>
 
 <div class="scrim" id="scrim" hidden></div>
@@ -232,7 +248,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
 <script>
 (function(){
   var PAGE = 48;
-  var state = { data:null, items:[], byId:{}, cond:'Liquidación', clave:'', cat:'', q:'', sort:'rel', shown:PAGE, cart:{}, view:'cart', sending:false, lastOrder:null, payQuery:null, uploading:false, demoOrders:{} };
+  var state = { data:null, items:[], byId:{}, cond:'Liquidación', clave:'', linea:'', cat:'', q:'', sort:'rel', shown:PAGE, cart:{}, view:'cart', entrega:'Recojo', sending:false, lastOrder:null, payQuery:null, uploading:false, demoOrders:{} };
   // Conexión con Apps Script: dentro de Apps Script usa google.script.run; publicada fuera (GitHub Pages) usa la URL /exec.
   var API_URL = window.OUTLET_API || '';
   function apiRun(){
@@ -253,82 +269,110 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   var runner = API_URL ? apiRun : ((typeof google !== 'undefined' && google.script && google.script.run) ? function(){ return google.script.run; } : null);
   var live = !!runner;
   var $ = function(id){ return document.getElementById(id); };
-  var PRIV = {'Socios':1,'2da selección':1,'Lenta rotación':1};
-  function priv(c){ return !!PRIV[c]; }
   var fmt = function(n){ return 'S/ ' + Number(n).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2}); };
   var esc = function(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+  var norm = function(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); };
+
+  // Vistas de la tienda: Liquidación (público), Socios (con clave, precio socio), 2da selección (con clave)
+  var VISTAS = {
+    'Liquidación': { t:'Nuevos en liquidación', p:'Productos nuevos, en su empaque original, a precio de liquidación. Stock limitado.', priv:false },
+    'Socios': { t:'Precios para socios', p:'Precios especiales para colaboradores de Grupo Merpes y de las empresas del grupo. Compra personal, con boleta o factura; no se permite la reventa. Despacho no incluido.', priv:true },
+    '2da selección': { t:'Segunda selección', p:'Productos con observaciones, descritas en cada ficha con fotos reales de la unidad e informe descargable. Se venden en el estado mostrado y no incluyen garantía. Despacho no incluido.', priv:true }
+  };
+  function enVista(it, v){
+    if (v==='2da selección') return it.condicion==='2da selección';
+    if (v==='Socios') return (it.condicion==='Liquidación' && it.precioSocio>0) || it.condicion==='Socios';
+    return it.condicion==='Liquidación';
+  }
+  function modo(){ return state.cond==='Liquidación' ? 'P' : 'S'; }
+  function precioDe(it, m){ return m==='S' ? (it.precioSocio || it.precio) : it.precio; }
+  function keyOf(id, m){ return id+'|'+m; }
+  function splitKey(k){ var i=k.lastIndexOf('|'); return i<0 ? {id:k,m:'P'} : {id:k.slice(0,i), m:k.slice(i+1)}; }
 
   try{ state.clave = sessionStorage.getItem('merpesOutletClave')||''; }catch(e){}
   function opts(){ return { clave: state.clave||'' }; }
-  function loadCart(){ try{ var c = JSON.parse(localStorage.getItem('merpesOutletCart')||'{}'); if(c && typeof c==='object') state.cart=c; }catch(e){} }
-  function saveCart(){ try{ localStorage.setItem('merpesOutletCart', JSON.stringify(state.cart)); }catch(e){} }
+  function loadCart(){ try{ var c = JSON.parse(localStorage.getItem('merpesOutletCart2')||'{}'); if(c && typeof c==='object') state.cart=c; }catch(e){} }
+  function saveCart(){ try{ localStorage.setItem('merpesOutletCart2', JSON.stringify(state.cart)); }catch(e){} }
 
   function toast(msg){ var t=$('toast'); t.textContent=msg; t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(function(){t.hidden=true;},2600); }
 
   function setData(d){
     if (d && !live && window.OUTLET_DEMO){ d = Object.assign({}, d, { socios: state.clave==='SOCIOS' }); }
-    state.data = d; state.items = (d.items || []).filter(function(it){ return d.socios || !priv(it.condicion); }); state.byId = {};
+    state.data = d; state.items = (d.items || []).filter(function(it){ return d.socios || (it.condicion==='Liquidación'); }); state.byId = {};
     state.items.forEach(function(it){ state.byId[it.id]=it; });
     $('storeName').textContent = d.tienda || 'Merpes Outlet';
     if (d.nota){ $('notice').textContent = d.nota; $('notice').hidden=false; } else { $('notice').hidden=true; }
     // ajustar carrito al stock vigente
     var changed = [];
-    Object.keys(state.cart).forEach(function(id){
-      var it = state.byId[id], q = state.cart[id];
-      var max = it ? limit(it) : 0;
-      if (q > max){ if (max>0) state.cart[id]=max; else delete state.cart[id]; changed.push(it ? it.nombre : id); }
+    Object.keys(state.cart).forEach(function(k){
+      var p = splitKey(k), it = state.byId[p.id];
+      if (!it || (p.m==='S' && !d.socios)){ delete state.cart[k]; changed.push(p.id); return; }
+      var otros = enCarrito(p.id) - state.cart[k], max = Math.max(0, limit(it) - otros);
+      if (state.cart[k] > max){ if (max>0) state.cart[k]=max; else delete state.cart[k]; changed.push(it.nombre); }
     });
     saveCart();
-    var cats = {}; state.items.forEach(function(it){ cats[it.categoria]=(cats[it.categoria]||0)+1; });
-    var sel = $('cat'), cur = state.cat;
-    sel.innerHTML = '<option value="">Todas las categorías</option>' + Object.keys(cats).sort().map(function(c){ return '<option value="'+esc(c)+'">'+esc(c)+' ('+cats[c]+')</option>'; }).join('');
-    sel.value = cur;
     render(); renderCart();
     return changed;
   }
-  function limit(it){ var m = state.data && state.data.maxPorItem > 0 ? state.data.maxPorItem : Infinity; return Math.max(0, Math.min(it.stock, m)); }
+  function limit(it){ var m = state.data && state.data.maxPorItem > 0 && it.condicion!=='2da selección' ? state.data.maxPorItem : Infinity; return Math.max(0, Math.min(it.stock, m)); }
+  function enCarrito(id){ var n=0; Object.keys(state.cart).forEach(function(k){ if (splitKey(k).id===id) n+=state.cart[k]; }); return n; }
+  function libre(it){ return Math.max(0, limit(it) - enCarrito(it.id)); }
 
+  function enVistaActual(){ return state.items.filter(function(it){ return enVista(it, state.cond); }); }
   function filtered(){
-    var q = state.q.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-    var words = q ? q.split(/\s+/) : [];
-    var list = state.items.filter(function(it){
-      if (state.cond && it.condicion !== state.cond) return false;
+    var words = norm(state.q.trim()).split(/\s+/).filter(String);
+    var list = enVistaActual().filter(function(it){
+      if (state.linea && it.linea !== state.linea) return false;
       if (state.cat && it.categoria !== state.cat) return false;
       if (words.length){
-        var hay = (it.nombre+' '+it.codigo+' '+it.categoria+' '+(it.serie||'')+' '+(it.marca||'')).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+        var hay = norm(it.nombre+' '+it.codigo+' '+it.categoria+' '+(it.linea||'')+' '+(it.serie||'')+' '+(it.marca||''));
         for (var i=0;i<words.length;i++) if (hay.indexOf(words[i])<0) return false;
       }
       return true;
     });
-    var s = state.sort;
-    if (s==='pa') list.sort(function(a,b){return a.precio-b.precio;});
-    else if (s==='pd') list.sort(function(a,b){return b.precio-a.precio;});
+    var m = modo(), s = state.sort;
+    if (s==='pa') list.sort(function(a,b){return precioDe(a,m)-precioDe(b,m);});
+    else if (s==='pd') list.sort(function(a,b){return precioDe(b,m)-precioDe(a,m);});
     else if (s==='st') list.sort(function(a,b){return b.stock-a.stock;});
-    else list.sort(function(a,b){ return (b.imagen?1:0)-(a.imagen?1:0) || (b.stock>0)-(a.stock>0); });
+    else list.sort(function(a,b){ return (b.imagen?1:0)-(a.imagen?1:0) || (b.stock>0)-(a.stock>0) || precioDe(b,m)-precioDe(a,m); });
     return list;
   }
 
+  function lineas(){
+    var base = enVistaActual(), cnt = {};
+    base.forEach(function(it){ var l = it.linea || 'Otros'; cnt[l]=(cnt[l]||0)+1; });
+    var html = '<button type="button" data-l="" aria-pressed="'+(!state.linea)+'"><span>Todas las líneas</span><b>'+base.length+'</b></button>' +
+      Object.keys(cnt).sort(function(a,b){ return cnt[b]-cnt[a] || a.localeCompare(b); }).map(function(l){
+        return '<button type="button" data-l="'+esc(l)+'" aria-pressed="'+(state.linea===l)+'"><span>'+esc(l)+'</span><b>'+cnt[l]+'</b></button>'; }).join('');
+    $('lineas').innerHTML = '<h3>Líneas</h3>' + html;
+    var cats = {}; base.filter(function(it){ return !state.linea || it.linea===state.linea; }).forEach(function(it){ cats[it.categoria]=(cats[it.categoria]||0)+1; });
+    var sel = $('cat'), cur = state.cat;
+    sel.innerHTML = '<option value="">Todas las categorías</option>' + Object.keys(cats).sort().map(function(c){ return '<option value="'+esc(c)+'">'+esc(c)+' ('+cats[c]+')</option>'; }).join('');
+    sel.value = cats[cur] ? cur : ''; state.cat = sel.value;
+  }
+  $('lineas').addEventListener('click', function(e){ var b=e.target.closest('button'); if(!b) return; state.linea=b.dataset.l; state.cat=''; state.shown=PAGE; render();
+    if (window.innerWidth < 900) $('grid').scrollIntoView({block:'start',behavior:'smooth'}); });
+
   function card(it){
-    var inCart = state.cart[it.id]||0, max = limit(it), left = max - inCart;
-    var sec = it.condicion === 'Socios', und = it.condicion === '2da selección', lr = it.condicion === 'Lenta rotación';
-    if (und) return cardUnidad(it, inCart);
+    if (it.condicion === '2da selección') return cardUnidad(it);
+    var m = modo(), soc = m==='S', left = libre(it), inCart = enCarrito(it.id), p = precioDe(it, m);
     var stockTxt = it.stock<=0 ? '<span class="stock out">Agotado</span>' :
       '<span class="stock'+(it.stock<=2?' low':'')+'">'+(it.stock===1?'Última unidad':'Quedan '+it.stock+' und')+(inCart?' · '+inCart+' en tu carrito':'')+'</span>';
     var img = it.imagen ? '<img src="'+esc(it.imagen)+'" alt="'+esc(it.nombre)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),{className:\'blank\'}))">' : '<div class="blank"></div>';
     return '<article class="card" data-id="'+esc(it.id)+'">'+
-      '<div class="ph">'+img+'<span class="tag '+(sec?'s':lr?'l':'n')+'">'+esc(it.condicion)+'</span></div>'+
+      '<div class="ph">'+img+'<span class="tag '+(soc?'s':'n')+'">'+(soc?'Precio socio':'Nuevo')+'</span></div>'+
       '<div class="body"><span class="cat">'+esc(it.categoria)+' · '+esc(it.codigo)+'</span>'+
       '<div class="name" title="'+esc(it.nombre)+'">'+esc(it.nombre)+'</div>'+
-      '<div class="price">'+fmt(it.precio)+'<small>'+(state.data&&state.data.conIgv===false?'+ IGV':'inc. IGV')+'</small></div>'+stockTxt+
+      (soc && it.precio>p ? '<span class="was">Precio público '+fmt(it.precio)+'</span>' : '')+
+      '<div class="price">'+fmt(p)+'<small>'+(state.data&&state.data.conIgv===false?'+ IGV':'inc. IGV')+'</small></div>'+stockTxt+
       '<div class="buy"><div class="qty"><button type="button" data-a="dec" aria-label="Menos">−</button>'+
       '<input type="number" inputmode="numeric" min="1" max="'+Math.max(1,left)+'" value="1" aria-label="Cantidad" '+(left<=0?'disabled':'')+'>'+
       '<button type="button" data-a="inc" aria-label="Más" '+(left<=1?'disabled':'')+'>+</button></div>'+
       '<button type="button" class="add" data-a="add" '+(left<=0?'disabled':'')+'>'+(it.stock<=0?'Agotado':left<=0?'Sin más stock':'Agregar')+'</button></div>'+
       '</div></article>';
   }
-
-  function cardUnidad(it, inCart){
-    var nf = (it.fotos||[]).length, d = it.desperfectos||[];
+  function cardUnidad(it){
+    var inCart = enCarrito(it.id)>0, nf = (it.fotos||[]).length, d = it.desperfectos||[];
     var img = it.imagen ? '<img src="'+esc(it.imagen)+'" alt="'+esc(it.nombre)+'" loading="lazy" referrerpolicy="no-referrer">' : '<div class="blank"></div>';
     return '<article class="card" data-id="'+esc(it.id)+'">'+
       '<div class="ph" data-a="det" style="cursor:pointer">'+img+'<span class="tag u">2da selección</span>'+(nf?'<span class="nf">'+nf+' fotos</span>':'')+'</div>'+
@@ -337,13 +381,13 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       '<div class="chips">'+(d.length?d.slice(0,3).map(function(x){return '<span class="chip w">'+esc(x)+'</span>';}).join('')+(d.length>3?'<span class="chip">+'+(d.length-3)+'</span>':''):'')+'</div>'+
       '<div class="price">'+fmt(it.precio)+'<small>'+(state.data&&state.data.conIgv===false?'+ IGV':'inc. IGV')+'</small></div>'+
       '<span class="stock low">Unidad única · Serie '+esc(it.serie)+'</span>'+
-      '<button type="button" class="det" data-a="det">Ver fotos, estado e informe</button>'+
+      '<button type="button" class="det" data-a="det">Ver fotos, condición e informe</button>'+
       '<div class="buy"><button type="button" class="add" data-a="add1" '+(inCart?'disabled':'')+'>'+(inCart?'En tu carrito':'Agregar')+'</button></div>'+
       '</div></article>';
   }
   function detalle(it){
     var fotos = it.fotos && it.fotos.length ? it.fotos : (it.imagen ? [it.imagen] : []);
-    var inCart = !!state.cart[it.id];
+    var inCart = enCarrito(it.id)>0;
     $('mBox').innerHTML = '<button class="x mx" type="button" id="mX" aria-label="Cerrar">×</button><div class="gal"><div class="main">'+(fotos[0]?'<img id="mMain" src="'+esc(fotos[0])+'" alt="Foto 1 de la unidad" referrerpolicy="no-referrer">':'<div class="blank"></div>')+'</div>'+
       (fotos.length>1?'<div class="thumbs">'+fotos.map(function(f,i){ return '<button type="button" data-src="'+esc(f)+'" aria-current="'+(i===0)+'" aria-label="Foto '+(i+1)+'"><img src="'+esc(f)+'" alt="" referrerpolicy="no-referrer"></button>'; }).join('')+'</div>':'')+
       '<p class="lm">Fotos reales de esta unidad (serie '+esc(it.serie)+').</p></div>'+
@@ -356,42 +400,38 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       '<div class="price">'+fmt(it.precio)+'<small>'+(state.data&&state.data.conIgv===false?'+ IGV':'inc. IGV')+'</small></div>'+
       (it.informe?'<a class="btn" href="'+esc(it.informe)+'" target="_blank" rel="noopener">Descargar informe de la unidad (PDF)</a>':'')+
       '<button class="btn primary" type="button" id="mAdd" '+(inCart?'disabled':'')+'>'+(inCart?'Ya está en tu carrito':'Agregar al carrito')+'</button>'+
-      '<p class="lm">Producto de segunda selección: se vende en el estado descrito y fotografiado. Entrega con boleta o factura.</p></div>';
+      '<p class="lm">Producto de segunda selección: se vende en el estado descrito y fotografiado, sin garantía. Entrega con boleta o factura.</p></div>';
     $('modal').hidden = false;
     $('mX').onclick = cerrarDet; $('mScrim').onclick = cerrarDet;
-    $('mAdd').onclick = function(){ add(it.id, 1); cerrarDet(); };
+    $('mAdd').onclick = function(){ add(it.id, 1, 'S'); cerrarDet(); };
     $('mBox').querySelectorAll('.thumbs button').forEach(function(b){ b.onclick = function(){ $('mMain').src = b.dataset.src;
       $('mBox').querySelectorAll('.thumbs button').forEach(function(x){ x.setAttribute('aria-current', x===b?'true':'false'); }); }; });
   }
   function cerrarDet(){ $('modal').hidden = true; }
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !$('modal').hidden) cerrarDet(); });
 
-  var INTRO = {
-    'Liquidación': ['Catálogo de liquidación','Productos nuevos de temporadas anteriores a precio de liquidación, stock limitado. Solo puedes pedir hasta las unidades disponibles.'],
-    'Socios': ['Catálogo para socios','Precios especiales para colaboradores de Grupo Merpes y empresas del grupo. Compra personal, con boleta o factura; no se permite la reventa.'],
-    '2da selección': ['Segunda selección','Cada publicación es una unidad única, con sus fotos reales, su condición y desperfectos, y un informe descargable. Exclusivo para colaboradores y empresas del grupo.'],
-    'Lenta rotación': ['Lenta rotación','Productos nuevos, en su caja, a precio especial para colaboradores y empresas del grupo. Stock limitado.']
-  };
   function render(){
-    var locked = priv(state.cond) && !(state.data && state.data.socios);
-    var tx = INTRO[state.cond] || INTRO['Liquidación'];
-    $('introT').textContent = tx[0]; $('introP').textContent = tx[1];
-    $('lock').hidden = !locked; $('grid').hidden = locked;
+    var v = VISTAS[state.cond] || VISTAS['Liquidación'];
+    var locked = v.priv && !(state.data && state.data.socios);
+    $('introT').textContent = v.t; $('introP').textContent = v.p;
+    $('lock').hidden = !locked; $('grid').hidden = locked; $('lineas').hidden = locked;
     if (locked){ $('count').textContent = 'Acceso con clave'; $('moreBtn').hidden = true; return; }
+    lineas();
     var list = filtered();
-    $('count').textContent = list.length + ' producto' + (list.length===1?'':'s') + ' · ' + list.filter(function(i){return i.stock>0;}).length + ' con stock';
+    $('count').textContent = list.length + ' producto' + (list.length===1?'':'s') + (state.linea ? ' en ' + state.linea : '');
     var slice = list.slice(0, state.shown);
     $('grid').innerHTML = slice.length ? slice.map(card).join('') : '<div class="empty">No encontramos productos con esos filtros.</div>';
     $('moreBtn').hidden = list.length <= state.shown;
   }
 
-  function add(id, qty){
+  function add(id, qty, m){
     var it = state.byId[id]; if (!it) return;
-    var max = limit(it), cur = state.cart[id]||0;
-    var n = Math.min(max, cur + qty);
-    if (n<=cur){ toast('No hay más unidades disponibles de este producto.'); return; }
-    state.cart[id] = n; saveCart();
-    toast(n-cur===qty ? 'Agregado al carrito' : 'Solo se agregaron '+(n-cur)+' (stock disponible)');
+    m = m || modo();
+    var k = keyOf(id, m), left = libre(it);
+    var n = Math.min(left, qty);
+    if (n<=0){ toast('No hay más unidades disponibles de este producto.'); return; }
+    state.cart[k] = (state.cart[k]||0) + n; saveCart();
+    toast(n===qty ? 'Agregado al carrito' : 'Solo se agregaron '+n+' (stock disponible)');
     render(); renderCart();
   }
 
@@ -400,8 +440,8 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     if (dt){ var cc = dt.closest('.card'); detalle(state.byId[cc.getAttribute('data-id')]); return; }
     var b = e.target.closest('button'); if (!b) return;
     var c = b.closest('.card'), id = c.getAttribute('data-id'), it = state.byId[id];
-    if (b.dataset.a==='add1'){ add(id, 1); return; }
-    var inp = c.querySelector('input'), left = limit(it) - (state.cart[id]||0);
+    if (b.dataset.a==='add1'){ add(id, 1, 'S'); return; }
+    var inp = c.querySelector('input'), left = libre(it);
     var v = parseInt(inp.value,10)||1;
     if (b.dataset.a==='inc'){ v=Math.min(left, v+1); inp.value=v; }
     if (b.dataset.a==='dec'){ v=Math.max(1, v-1); inp.value=v; }
@@ -410,21 +450,19 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   });
   $('grid').addEventListener('change', function(e){
     if (e.target.tagName!=='INPUT') return;
-    var c = e.target.closest('.card'); if (!c.querySelector('.qty')) return;
-    var it = state.byId[c.getAttribute('data-id')];
-    var left = limit(it) - (state.cart[it.id]||0);
-    var v = Math.max(1, Math.min(left, parseInt(e.target.value,10)||1)); e.target.value=v;
+    var c = e.target.closest('.card'), it = state.byId[c.getAttribute('data-id')];
+    var v = Math.max(1, Math.min(libre(it), parseInt(e.target.value,10)||1)); e.target.value=v;
   });
 
   // filtros
   document.querySelectorAll('.seg button').forEach(function(b){ b.addEventListener('click', function(){
     document.querySelectorAll('.seg button').forEach(function(x){ x.setAttribute('aria-pressed', x===b?'true':'false'); });
-    state.cond = b.dataset.cond; state.shown=PAGE; render(); }); });
+    state.cond = b.dataset.cond; state.linea=''; state.cat=''; state.shown=PAGE; render(); }); });
   $('lockF').addEventListener('submit', function(e){ e.preventDefault();
     var k = $('lockK').value.trim(), er=$('lockE'); if(!k){ er.textContent='Ingresa la clave.'; er.hidden=false; return; }
     $('lockB').disabled=true; $('lockB').textContent='Verificando…';
     var fin=function(d){ $('lockB').disabled=false; $('lockB').textContent='Ingresar';
-      if (d && d.socios){ er.hidden=true; try{ sessionStorage.setItem('merpesOutletClave', k); }catch(x){} setData(d); toast('Bienvenido al catálogo para socios'); }
+      if (d && d.socios){ er.hidden=true; try{ sessionStorage.setItem('merpesOutletClave', k); }catch(x){} setData(d); toast('Bienvenido'); }
       else { state.clave=''; er.textContent='Clave incorrecta. Consulta con Recursos Humanos.'; er.hidden=false; } };
     state.clave = k;
     if (live) runner().withSuccessHandler(fin).withFailureHandler(function(){ fin(null); }).getCatalogo(opts());
@@ -436,7 +474,8 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   $('moreBtn').addEventListener('click', function(){ state.shown += PAGE; render(); });
 
   // carrito
-  function cartLines(){ return Object.keys(state.cart).map(function(id){ var it=state.byId[id]; return it?{it:it,q:state.cart[id]}:null; }).filter(Boolean); }
+  function cartLines(){ return Object.keys(state.cart).map(function(k){ var p=splitKey(k), it=state.byId[p.id]; return it?{k:k,it:it,m:p.m,q:state.cart[k],p:precioDe(it,p.m)}:null; }).filter(Boolean); }
+  function despacho(){ return state.entrega==='Despacho' ? Number((state.data&&state.data.despacho)||0) : 0; }
   function openCart(view){ state.view = view||'cart'; renderCart(); $('scrim').hidden=false; $('drawer').hidden=false; }
   function closeCart(){ $('scrim').hidden=true; $('drawer').hidden=true; if (state.view==='done'){ state.view='cart'; } }
   $('openCart').addEventListener('click', function(){ openCart(state.view==='done'||state.view==='pay'?'cart':state.view); });
@@ -445,14 +484,14 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !$('drawer').hidden) closeCart(); });
 
   function renderCart(){
-    var lines = cartLines(), units = lines.reduce(function(s,l){return s+l.q;},0), total = lines.reduce(function(s,l){return s+l.q*l.it.precio;},0);
+    var lines = cartLines(), units = lines.reduce(function(s,l){return s+l.q;},0), sub = lines.reduce(function(s,l){return s+l.q*l.p;},0);
     $('cartCount').textContent = units;
     var body=$('dBody'), foot=$('dFoot');
     if (state.view==='done' && state.lastOrder){
       var o = state.lastOrder;
       $('dTitle').textContent='Pedido reservado';
       body.innerHTML = '<div class="okbox"><h3>'+esc(o.numero)+'</h3>'+
-        '<p>Total a pagar: <b>'+fmt(o.total)+'</b> (inc. IGV). Reservamos tus unidades'+(o.vence?' hasta el <b>'+esc(o.vence)+'</b>':'')+'.</p>'+
+        '<p>Total a pagar: <b>'+fmt(o.total)+'</b> (inc. IGV'+(o.despacho?', incluye despacho '+fmt(o.despacho):'')+'). Reservamos tus unidades'+(o.vence?' hasta el <b>'+esc(o.vence)+'</b>':'')+'.</p>'+
         payBlock(o.numero, o.total)+ voucherForm(o.numero, o.documento)+
         (o.correoEnviado ? '<p class="lm">Enviamos el pedido a nuestro correo de ventas'+(o.copia?' y los datos de pago a tu correo':'')+'.</p>' : '')+
         (o.whatsapp ? '<a class="btn accent" href="'+esc(o.whatsapp)+'" target="_blank" rel="noopener">Avisar por WhatsApp</a>' : '')+
@@ -474,29 +513,36 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       $('pq').addEventListener('submit', function(e){ e.preventDefault(); buscarPedido(); });
       bindVoucher(); return;
     }
-    var cartSoc = lines.some(function(l){ return priv(l.it.condicion); });
+    var cartSoc = lines.some(function(l){ return l.m==='S'; }), costoDesp = Number((state.data&&state.data.despacho)||0);
     if (state.view==='checkout' && lines.length){
       $('dTitle').textContent='Datos del pedido';
+      var dsp = despacho();
       body.innerHTML = '<form class="co" id="co" novalidate>'+
         '<div class="fld"><label>Soy</label><div class="radio">'+
-          (cartSoc ? '' : '<label><input type="radio" name="tipo" value="Cliente externo" checked> Cliente externo</label>')+
+          (cartSoc ? '' : '<label><input type="radio" name="tipo" value="Cliente externo" checked> Cliente</label>')+
           (state.data && state.data.socios ? '<label><input type="radio" name="tipo" value="Socio · colaborador Merpes"'+(cartSoc?' checked':'')+'> Socio · colaborador</label>'+
           '<label><input type="radio" name="tipo" value="Socio · empresa del grupo"> Socio · empresa del grupo</label>' : '')+'</div>'+
-          (cartSoc ? '<p class="lm">Tu carrito tiene productos exclusivos para colaboradores y empresas del grupo.</p>' : '')+'</div>'+
-        '<div class="fld"><label for="f-nombre">Nombre y apellidos</label><input id="f-nombre" name="nombre" autocomplete="name" required></div>'+
+          (cartSoc ? '<p class="lm">Tu carrito tiene productos con precio exclusivo para colaboradores y empresas del grupo.</p>' : '')+'</div>'+
+        '<div class="fld"><label>Entrega</label><div class="radio">'+
+          '<label><input type="radio" name="entrega" value="Recojo"'+(state.entrega==='Recojo'?' checked':'')+'> Recojo en almacén (sin costo)</label>'+
+          '<label><input type="radio" name="entrega" value="Despacho"'+(state.entrega==='Despacho'?' checked':'')+'> Despacho a domicilio (+'+fmt(costoDesp)+')</label></div></div>'+
+        '<div class="fld"><label for="f-nombre">Nombre y apellidos / razón social</label><input id="f-nombre" name="nombre" autocomplete="name" required></div>'+
         '<div class="two"><div class="fld"><label for="f-doc" id="l-doc">'+(cartSoc?'DNI o código de trabajador':'DNI o RUC')+'</label><input id="f-doc" name="documento" required></div>'+
         '<div class="fld"><label for="f-tel">Teléfono / WhatsApp</label><input id="f-tel" name="telefono" inputmode="tel" autocomplete="tel" required></div></div>'+
         '<div class="fld"><label for="f-mail">Correo</label><input id="f-mail" name="correo" type="email" autocomplete="email"></div>'+
-        '<div class="fld"><label for="f-dir" id="l-dir">'+(cartSoc?'Área / empresa':'Dirección de entrega')+'</label><input id="f-dir" name="direccion"></div>'+
+        '<div class="fld"><label for="f-dir" id="l-dir">'+(state.entrega==='Despacho'?'Dirección de entrega (distrito y referencia)':(cartSoc?'Área / empresa (opcional)':'Dirección (opcional)'))+'</label><input id="f-dir" name="direccion"></div>'+
         '<div class="fld"><label for="f-com">Comentario (opcional)</label><textarea id="f-com" name="comentario" rows="2"></textarea></div>'+
         '<div class="err" id="coErr" hidden></div></form>';
-      foot.innerHTML = '<div class="tot"><span>'+units+' und</span><b>'+fmt(total)+'</b></div>'+
+      foot.innerHTML = '<div class="tot"><span>Productos ('+units+' und)</span><span>'+fmt(sub)+'</span></div>'+
+        (dsp?'<div class="tot"><span>Despacho</span><span>'+fmt(dsp)+'</span></div>':'')+
+        '<div class="tot"><span>Total</span><b>'+fmt(sub+dsp)+'</b></div>'+
         '<button class="btn primary" type="button" id="send">'+(state.sending?'Registrando pedido…':'Confirmar pedido')+'</button>'+
         '<button class="btn" type="button" id="back">Volver al carrito</button>';
       var f=$('co');
-      f.addEventListener('change', function(e){ if(e.target.name==='tipo'){ var v=e.target.value;
-        $('l-doc').textContent = v==='Cliente externo'?'DNI o RUC':(v.indexOf('empresa')>0?'RUC de la empresa':'DNI o código de trabajador');
-        $('l-dir').textContent = v==='Cliente externo'?'Dirección de entrega':(v.indexOf('empresa')>0?'Empresa y dirección':'Área / sede'); } });
+      f.addEventListener('change', function(e){
+        if(e.target.name==='tipo'){ var v=e.target.value;
+          $('l-doc').textContent = v==='Cliente externo'?'DNI o RUC':(v.indexOf('empresa')>0?'RUC de la empresa':'DNI o código de trabajador'); }
+        if(e.target.name==='entrega'){ var fd=leer(f); state.entrega=e.target.value; renderCart(); keepForm(fd); } });
       f.addEventListener('submit', function(e){ e.preventDefault(); submit(); });
       $('send').onclick = submit; $('send').disabled = state.sending;
       $('back').onclick = function(){ state.view='cart'; renderCart(); };
@@ -505,36 +551,37 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     state.view='cart';
     $('dTitle').textContent='Tu carrito';
     if (!lines.length){ body.innerHTML='<div class="empty">Tu carrito está vacío.<br>Agrega productos desde el catálogo.</div>'; foot.innerHTML=''; return; }
-    body.innerHTML = lines.map(function(l){ var it=l.it, max=limit(it);
-      return '<div class="line" data-id="'+esc(it.id)+'"><div class="th">'+(it.imagen?'<img src="'+esc(it.imagen)+'" alt="" referrerpolicy="no-referrer" onerror="this.remove()">':'')+'</div>'+
-        '<div><div class="ln">'+esc(it.nombre)+'</div><div class="lm">'+esc(it.condicion)+(it.serie?' · Serie '+esc(it.serie):'')+' · '+fmt(it.precio)+' c/u · máx. '+max+'</div>'+
+    body.innerHTML = lines.map(function(l){ var it=l.it, max=l.q+libre(it);
+      return '<div class="line" data-k="'+esc(l.k)+'"><div class="th">'+(it.imagen?'<img src="'+esc(it.imagen)+'" alt="" referrerpolicy="no-referrer" onerror="this.remove()">':'')+'</div>'+
+        '<div><div class="ln">'+esc(it.nombre)+'</div><div class="lm">'+(it.condicion==='2da selección'?'2da selección · Serie '+esc(it.serie):(l.m==='S'?'Precio socio':'Precio público'))+' · '+fmt(l.p)+' c/u</div>'+
         '<div class="qty" style="margin-top:6px;width:max-content"><button type="button" data-a="dec" '+(l.q<=1?'disabled':'')+'>−</button><input type="number" value="'+l.q+'" aria-label="Cantidad" readonly><button type="button" data-a="inc" '+(l.q>=max?'disabled':'')+'>+</button></div></div>'+
-        '<div class="lr">'+fmt(l.q*it.precio)+'<button type="button" class="rm" data-a="rm">Quitar</button></div></div>'; }).join('');
-    foot.innerHTML = '<div class="tot"><span>Total ('+units+' und)</span><b>'+fmt(total)+'</b></div>'+
+        '<div class="lr">'+fmt(l.q*l.p)+'<button type="button" class="rm" data-a="rm">Quitar</button></div></div>'; }).join('');
+    foot.innerHTML = '<div class="tot"><span>Total productos ('+units+' und)</span><b>'+fmt(sub)+'</b></div>'+
+      '<p class="lm" style="margin:0">Recojo en almacén sin costo. Despacho a domicilio: +'+fmt(costoDesp)+' por pedido.</p>'+
       '<button class="btn primary" type="button" id="toCheckout">Continuar con el pedido</button>';
     $('toCheckout').onclick = function(){ state.view='checkout'; renderCart(); };
   }
   $('dBody').addEventListener('click', function(e){
     var b=e.target.closest('button'); if(!b) return; var ln=b.closest('.line'); if(!ln) return;
-    var id=ln.getAttribute('data-id'), it=state.byId[id], max=limit(it);
-    if (b.dataset.a==='inc' && state.cart[id]<max) state.cart[id]++;
-    if (b.dataset.a==='dec' && state.cart[id]>1) state.cart[id]--;
-    if (b.dataset.a==='rm') delete state.cart[id];
+    var k=ln.getAttribute('data-k'), it=state.byId[splitKey(k).id];
+    if (b.dataset.a==='inc' && libre(it)>0) state.cart[k]++;
+    if (b.dataset.a==='dec' && state.cart[k]>1) state.cart[k]--;
+    if (b.dataset.a==='rm') delete state.cart[k];
     saveCart(); renderCart(); render();
   });
 
+  function leer(f){ var fd={}; ['nombre','documento','telefono','correo','direccion','comentario'].forEach(function(k){ fd[k]=(f.elements[k].value||'').trim(); });
+    var tsel = f.querySelector('input[name="tipo"]:checked'); fd.tipo = tsel ? tsel.value : ''; return fd; }
   function submit(){
     if (state.sending) return;
-    var f=$('co'), err=$('coErr'), fd={};
-    ['nombre','documento','telefono','correo','direccion','comentario'].forEach(function(k){ fd[k]=(f.elements[k].value||'').trim(); });
-    var tsel = f.querySelector('input[name="tipo"]:checked'); fd.tipo = tsel ? tsel.value : '';
-    if (!fd.tipo){ err.textContent='Indica si eres cliente externo o socio.'; err.hidden=false; return; }
+    var f=$('co'), err=$('coErr'), fd=leer(f);
+    if (!fd.tipo){ err.textContent='Indica si eres cliente o socio.'; err.hidden=false; return; }
     var miss=[]; if(!fd.nombre) miss.push('nombre'); if(!fd.documento) miss.push('documento'); if(fd.telefono.replace(/\D/g,'').length<9) miss.push('teléfono (9 dígitos)');
     if (fd.correo && !/^\S+@\S+\.\S+$/.test(fd.correo)) miss.push('correo válido');
-    if (fd.tipo==='Cliente externo' && !fd.direccion) miss.push('dirección de entrega');
+    if (state.entrega==='Despacho' && !fd.direccion) miss.push('dirección de entrega');
     if (miss.length){ err.textContent='Completa: '+miss.join(', ')+'.'; err.hidden=false; return; }
     err.hidden=true;
-    var pedido = { clave: state.clave||'', cliente: fd, lineas: cartLines().map(function(l){ return {id:l.it.id, cantidad:l.q}; }) };
+    var pedido = { clave: state.clave||'', cliente: fd, entrega: state.entrega, lineas: cartLines().map(function(l){ return {id:l.it.id, cantidad:l.q, socio:l.m==='S'}; }) };
     state.sending=true; renderCart(); keepForm(fd);
     var done = function(r){
       state.sending=false;
@@ -543,7 +590,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
         if (r && r.sinStock){ state.view='cart'; renderCart(); toast(r.error); } return; }
       cerrarDet();
       state.cart={}; saveCart();
-      state.lastOrder={numero:r.numero,total:r.total,vence:r.vence,documento:fd.documento,whatsapp:r.whatsapp,correoEnviado:r.correoEnviado,copia:!!fd.correo};
+      state.lastOrder={numero:r.numero,total:r.total,despacho:r.despacho||0,vence:r.vence,documento:fd.documento,whatsapp:r.whatsapp,correoEnviado:r.correoEnviado,copia:!!fd.correo};
       state.view='done'; render(); renderCart();
     };
     if (live){ runner().withSuccessHandler(done).withFailureHandler(function(){ done({ok:false,error:'Se perdió la conexión. Revisa tu internet e inténtalo de nuevo.'}); }).registrarPedido(pedido); }
@@ -553,13 +600,12 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
 
   // Modo vista previa (fuera de Apps Script): descuenta stock solo en esta pantalla
   function demoOrder(p){
-    if (p.lineas.some(function(l){ var it=state.byId[l.id]; return it&&priv(it.condicion); }) && p.cliente.tipo.indexOf('Socio')!==0) return {ok:false,error:'Los productos del catálogo de socios solo se venden a colaboradores y empresas del grupo.'};
-    var bad=[]; p.lineas.forEach(function(l){ var it=state.byId[l.id]; if(!it||l.cantidad>limit(it)) bad.push({id:l.id}); });
-    if (bad.length) return {ok:false,error:'Algunos productos ya no tienen el stock pedido.',sinStock:bad};
-    var total=0; p.lineas.forEach(function(l){ var it=state.byId[l.id]; it.stock-=l.cantidad; total+=it.precio*l.cantidad; });
+    if (p.lineas.some(function(l){ return l.socio; }) && p.cliente.tipo.indexOf('Socio')!==0) return {ok:false,error:'Los precios de socio solo aplican a colaboradores y empresas del grupo.'};
+    var total=0; p.lineas.forEach(function(l){ var it=state.byId[l.id]; it.stock-=l.cantidad; total+=precioDe(it,l.socio?'S':'P')*l.cantidad; });
+    var dsp = p.entrega==='Despacho' ? Number(state.data.despacho||0) : 0; total+=dsp;
     var v=new Date(Date.now()+((state.data&&state.data.plazoHoras)||24)*3600000);
     state.demoOrders['MO-VISTA-PREVIA']={doc:p.cliente.documento,total:total,estado:'Pendiente de pago'};
-    return {ok:true,numero:'MO-VISTA-PREVIA',total:total,vence:v.toLocaleString('es-PE',{dateStyle:'short',timeStyle:'short'}),whatsapp:'',correoEnviado:false,catalogo:state.data};
+    return {ok:true,numero:'MO-VISTA-PREVIA',total:total,despacho:dsp,vence:v.toLocaleString('es-PE',{dateStyle:'short',timeStyle:'short'}),whatsapp:'',correoEnviado:false,catalogo:state.data};
   }
 
   // ── Pago: datos de cuentas, voucher y consulta ──
