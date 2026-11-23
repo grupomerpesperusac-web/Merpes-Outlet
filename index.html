@@ -115,6 +115,9 @@ form.co{display:flex;flex-direction:column;gap:10px}
 .fld input,.fld textarea,.fld select{border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:var(--surface)}
 .seg2{display:flex;gap:6px;margin-bottom:10px}.seg2 button{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px;font-weight:700;cursor:pointer}.seg2 button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
 .leido{background:var(--okbg,#e2f0d9);color:var(--ok);border-radius:4px;padding:0 5px;font-size:10px;text-transform:none;letter-spacing:0}.avisos{background:#fff4d6;color:#5c4400;border-radius:8px;padding:8px 10px;font-size:13px;margin:8px 0}
+.dz{border:2px dashed var(--line);border-radius:10px;padding:14px;text-align:center;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;min-height:64px;font-size:13px}
+.dz:hover,.dz:focus,.dz.over{border-color:var(--brand);background:rgba(0,32,96,.04);outline:none}.dz.has{border-style:solid;justify-content:flex-start;text-align:left;color:var(--ink)}
+.dz img{width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}.dz span{flex:1;word-break:break-all}.dzx{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:12px}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .two>*{min-width:0}.fld input,.fld select{width:100%;min-width:0;box-sizing:border-box}
 .radio{display:flex;gap:8px;flex-wrap:wrap}
@@ -694,7 +697,46 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   function hoyISO(d){ d=d||new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); }
   // Formulario de venta Cálidda: "Leer capturas" (llena todo desde las imágenes) o "Llenado manual"
   var SF_CAMPOS = ['calNum','fecha','estado','importe','nombre','documento','telefono','contrato','despacho','direccion','asesor'];
-  function sfNuevo(){ state.supForm = { modo:'leer', fecha:hoyISO(), estado:'Pendiente de entrega', despacho:'Delivery a domicilio', leidos:{}, avisos:[], lecturaId:'', leyendo:false }; }
+  // Zonas para las capturas: clic para elegir, arrastrar y soltar, o pegar con Ctrl+V
+  function dropZone(k, label){
+    var f=(state.supForm.caps||{})[k], u=f && /^image\//.test(f.type) ? (f._url || (f._url=URL.createObjectURL(f))) : '';
+    return '<div class="fld"><label>'+esc(label)+'</label><div class="dz'+(f?' has':'')+'" data-k="'+k+'" tabindex="0" role="button" aria-label="'+esc(label)+'">'+
+      '<input type="file" accept="image/*,application/pdf" hidden>'+
+      (f ? (u?'<img src="'+u+'" alt="">':'')+'<span>'+esc(f.name||'captura')+'</span><button type="button" class="dzx" data-x="'+k+'">Quitar</button>'
+         : '<span>Arrastra la imagen aquí, pégala con <b>Ctrl+V</b> o haz clic para elegirla</span>')+'</div></div>';
+  }
+  function setCap(k, file){
+    if (!file) return;
+    if (!/^image\/|^application\/pdf$/.test(file.type)){ toast('Solo imágenes o PDF.'); return; }
+    if (file.size>8*1024*1024){ toast('La captura debe pesar menos de 8 MB.'); return; }
+    sfGuardar(); state.supForm.caps = state.supForm.caps || {}; state.supForm.caps[k]=file; renderCart();
+  }
+  function bindDropZones(){
+    document.querySelectorAll('#dBody .dz').forEach(function(z){
+      var k=z.dataset.k, inp=z.querySelector('input');
+      z.onclick=function(e){ if (e.target.closest('.dzx')){ sfGuardar(); delete state.supForm.caps[k]; renderCart(); return; } inp.click(); };
+      z.onkeydown=function(e){ if (e.key==='Enter'||e.key===' '){ e.preventDefault(); inp.click(); } };
+      inp.onchange=function(){ setCap(k, inp.files[0]); };
+      z.ondragover=function(e){ e.preventDefault(); z.classList.add('over'); };
+      z.ondragleave=function(){ z.classList.remove('over'); };
+      z.ondrop=function(e){ e.preventDefault(); z.classList.remove('over'); setCap(k, e.dataTransfer.files[0]); };
+    });
+  }
+  // Si sueltan la imagen fuera de la zona, evitar que el navegador la abra y pierda el formulario
+  ['dragover','drop'].forEach(function(ev){ document.addEventListener(ev, function(e){ if (state.sup && state.view==='checkout' && !$('drawer').hidden && !e.target.closest('.dz')) e.preventDefault(); }); });
+  document.addEventListener('paste', function(e){
+    if (!state.sup || state.view!=='checkout' || $('drawer').hidden || !state.supForm) return;
+    var items=(e.clipboardData && e.clipboardData.items)||[], file=null;
+    for (var i=0;i<items.length;i++){ if (items[i].kind==='file' && /^image\//.test(items[i].type)){ file=items[i].getAsFile(); break; } }
+    if (!file) return;                       // texto normal: se pega en el campo
+    e.preventDefault();
+    var caps=state.supForm.caps||{}, foco=document.activeElement && document.activeElement.closest && document.activeElement.closest('.dz');
+    var orden = state.supForm.modo==='leer' ? ['cap1','cap2'] : ['capx'];
+    var k = foco ? foco.dataset.k : (orden.filter(function(x){ return !caps[x]; })[0] || orden[orden.length-1]);
+    try { file = new File([file], 'captura_'+k+'.png', {type:file.type}); } catch(x){}
+    setCap(k, file); toast('Captura pegada');
+  });
+  function sfNuevo(){ state.supForm = { caps:{}, modo:'leer', fecha:hoyISO(), estado:'Pendiente de entrega', despacho:'Delivery a domicilio', leidos:{}, avisos:[], lecturaId:'', leyendo:false }; }
   function sfGuardar(){ var f=$('sv'); if(!f) return; SF_CAMPOS.forEach(function(k){ if (f.elements[k]) state.supForm[k]=f.elements[k].value; }); }
   function renderSupVenta(lines, sub){
     var body=$('dBody'), foot=$('dFoot'), F=state.supForm || (sfNuevo(), state.supForm), L=F.leidos||{};
@@ -709,8 +751,8 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       '<div class="seg2"><button type="button" data-m="leer" aria-pressed="'+(F.modo==='leer')+'">Leer capturas</button><button type="button" data-m="manual" aria-pressed="'+(F.modo==='manual')+'">Llenado manual</button></div>'+
       (F.modo==='leer' ?
         '<div class="pay"><h4>1. Sube las capturas de la plataforma Cálidda</h4><p class="lm">La web lee el N° de pedido, cliente, DNI, fecha, importe, estado y productos. Luego revisas y registras.</p>'+
-        '<div class="fld"><label for="cap1">Detalle del pedido ("Ver Financiamiento" con productos)</label><input id="cap1" type="file" accept="image/*,application/pdf"></div>'+
-        '<div class="fld"><label for="cap2">Fila de la lista de pedidos (con el Estado)</label><input id="cap2" type="file" accept="image/*,application/pdf"></div>'+
+        dropZone('cap1','Detalle del pedido ("Ver Financiamiento" con productos)')+
+        dropZone('cap2','Fila de la lista de pedidos (con el Estado)')+
         '<button class="btn primary" type="button" id="leer"'+(F.leyendo?' disabled':'')+'>'+(F.leyendo?'Leyendo capturas…':'Leer capturas')+'</button></div>'
         : '<p class="lm">Llenado manual: úsalo si no tienes la captura o salió borrosa. Agrega los productos desde el catálogo y completa los datos. Las ventas sin captura se revisan antes del despacho.</p>')+
       (F.avisos && F.avisos.length ? '<div class="avisos">'+F.avisos.map(function(a){ return '<div>• '+esc(a)+'</div>'; }).join('')+'</div>' : '')+
@@ -730,7 +772,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       '<div class="two">'+inp('contrato','Cuenta contrato','inputmode="numeric"')+
         '<div class="fld"><label for="sv-despacho">Tipo de despacho'+tag('despacho')+'</label><select id="sv-despacho" name="despacho">'+['Delivery a domicilio','Recojo en tienda'].map(function(e){ return '<option'+(F.despacho===e?' selected':'')+'>'+e+'</option>'; }).join('')+'</select></div></div>'+
       inp('direccion','Dirección de entrega')+inp('asesor','Asesor (vendedor)')+
-      (F.modo==='manual' ? '<div class="fld"><label for="sv-x">Captura del pedido (opcional, imagen o PDF)</label><input id="sv-x" name="archivo" type="file" accept="image/*,application/pdf"></div>' : '')+
+      (F.modo==='manual' ? dropZone('capx','Captura del pedido (opcional)') : '')+
       '<div class="err" id="svE" hidden></div></form>';
     foot.innerHTML = '<div class="tot"><span>Total precio Cálidda</span><b>'+fmt(sub)+'</b></div>'+
       '<button class="btn primary" type="button" id="svGo">'+(state.sending?'Registrando…':'Registrar venta')+'</button>'+
@@ -738,6 +780,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     body.querySelectorAll('.seg2 button').forEach(function(b){ b.onclick=function(){ sfGuardar(); state.supForm.modo=b.dataset.m; renderCart(); }; });
     $('sv').addEventListener('input', sfGuardar); $('sv').addEventListener('change', function(e){ sfGuardar(); if (e.target.name==='fecha') renderCart(); });
     if ($('leer')) $('leer').onclick=supLeer;
+    bindDropZones();
     $('svNew').onclick=function(){ sfNuevo(); state.cart={}; saveCart(); render(); renderCart(); };
     $('svGo').disabled = state.sending || !lines.length || otros.length>0; $('svGo').onclick=function(){ supEnviar(lines); };
   }
@@ -756,7 +799,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     rd.readAsDataURL(file);
   }
   function supLeer(){
-    var F=state.supForm, a=$('cap1').files[0], b=$('cap2').files[0], er=$('svE');
+    var F=state.supForm, caps=F.caps||{}, a=caps.cap1, b=caps.cap2;
     if (!a && !b){ F.avisos=['Sube al menos una captura (lo ideal son las dos).']; renderCart(); return; }
     if ((a&&a.size>8*1024*1024)||(b&&b.size>8*1024*1024)){ F.avisos=['Cada captura debe pesar menos de 8 MB.']; renderCart(); return; }
     F.leyendo=true; F.avisos=[]; renderCart();
@@ -774,7 +817,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   function supEnviar(lines){
     if (state.sending) return;
     sfGuardar();
-    var F=state.supForm, er=$('svE'), fx=$('sv-x') ? $('sv-x').files[0] : null;
+    var F=state.supForm, er=$('svE'), fx=F.modo==='manual' ? (F.caps||{}).capx : null;
     var d={ lineas: lines.map(function(l){ return {id:l.it.id, cantidad:l.q}; }), calNum: String(F.calNum||'').trim(), fechaVenta: F.fecha, estadoCal: F.estado,
       importe: Number(F.importe), despacho: F.despacho, asesor: String(F.asesor||'').trim(), lecturaId: F.lecturaId||'',
       cliente: { nombre: String(F.nombre||'').trim(), documento: String(F.documento||'').trim(), telefono: String(F.telefono||'').trim(), contrato: String(F.contrato||'').trim(), direccion: String(F.direccion||'').trim() } };
