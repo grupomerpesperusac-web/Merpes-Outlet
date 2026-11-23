@@ -63,9 +63,10 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .notice{margin-block:8px 0;padding:10px 12px;border-radius:8px;background:var(--chip);color:var(--ink);font-size:14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding-block:14px 24px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.ph{aspect-ratio:1/1;max-width:100%;background:#fff;display:grid;place-items:center;position:relative;border-bottom:1px solid var(--line)}
-.ph img{width:100%;height:100%;object-fit:contain;padding:12px}
-.ph .blank{width:100%;height:100%;background:#fff}
+.ph{aspect-ratio:1/1;max-width:100%;background:#fff;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.ph img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:contain;padding:12px;box-sizing:border-box}
+.ph .blank{position:absolute;inset:0;background:#fff}
+.ph .tag,.ph .nf{z-index:1}
 .tag{position:absolute;left:8px;top:8px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:4px}
 .tag.n{background:var(--brand);color:#fff}
 .tag.s{background:var(--accent);color:var(--accent-ink)}
@@ -112,7 +113,10 @@ form.co{display:flex;flex-direction:column;gap:10px}
 .fld{display:flex;flex-direction:column;gap:4px}
 .fld label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
 .fld input,.fld textarea,.fld select{border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:var(--surface)}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg2{display:flex;gap:6px;margin-bottom:10px}.seg2 button{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px;font-weight:700;cursor:pointer}.seg2 button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
+.leido{background:var(--okbg,#e2f0d9);color:var(--ok);border-radius:4px;padding:0 5px;font-size:10px;text-transform:none;letter-spacing:0}.avisos{background:#fff4d6;color:#5c4400;border-radius:8px;padding:8px 10px;font-size:13px;margin:8px 0}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.two>*{min-width:0}.fld input,.fld select{width:100%;min-width:0;box-sizing:border-box}
 .radio{display:flex;gap:8px;flex-wrap:wrap}
 .radio label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600}
 .err{color:var(--danger);font-size:13px;font-weight:600}
@@ -191,12 +195,14 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="q" type="search" placeholder="Buscar por producto, marca o código" aria-label="Buscar productos">
       </div>
+      <button class="cartbtn" id="openSup" type="button" aria-label="Acceso de supervisores Cálidda">Supervisores</button>
       <button class="cartbtn" id="openPay" type="button" aria-label="Pagar o consultar mi pedido">Mi pedido</button>
       <button class="cartbtn" id="openCart" type="button" aria-label="Abrir carrito">Carrito <span class="n" id="cartCount">0</span></button>
     </div>
     <div class="filters">
       <div class="seg" role="group" aria-label="Condición">
         <button type="button" data-cond="Liquidación" aria-pressed="true">Nuevos en liquidación</button>
+        <button type="button" data-cond="Liquidación B2B" aria-pressed="false">Liquidación B2B</button>
         <button type="button" data-cond="Socios" aria-pressed="false">Socios</button>
         <button type="button" data-cond="2da selección" aria-pressed="false">2da selección</button>
       </div>
@@ -222,7 +228,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   <div class="notice" id="notice" hidden></div>
   <section class="lock" id="lock" hidden>
     <h2>Acceso con clave</h2>
-    <p>Exclusivo para colaboradores de Grupo Merpes y empresas del grupo. Ingresa la clave que te entregó Recursos Humanos o tu jefe de área.</p>
+    <p id="lockP">Exclusivo para colaboradores de Grupo Merpes y empresas del grupo. Ingresa la clave que te entregó Recursos Humanos o tu jefe de área.</p>
     <form id="lockF" class="lockf" novalidate><input id="lockK" type="password" autocomplete="off" placeholder="Clave de acceso" aria-label="Clave de acceso"><button class="btn primary" type="submit" id="lockB">Ingresar</button></form>
     <div class="err" id="lockE" hidden></div>
   </section>
@@ -233,7 +239,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       <div class="more"><button class="btn" id="moreBtn" type="button" hidden>Ver más productos</button></div>
     </div>
   </div>
-  <footer>Precios en soles, incluyen IGV. En Nuevos en liquidación y Socios las imágenes son referenciales; en 2da selección las fotos corresponden a la unidad publicada y esos productos no incluyen garantía. Despacho a domicilio con costo adicional por pedido; recojo en almacén sin costo. Las unidades se reservan por un plazo limitado hasta recibir el voucher de pago. Pagos solo a cuentas a nombre de Grupo Merpes Perú S.A.C. El producto se entrega con boleta o factura.</footer>
+  <footer>Precios en soles, incluyen IGV. En Nuevos en liquidación y Socios las imágenes son referenciales; en 2da selección las fotos corresponden a la unidad publicada y esos productos no incluyen garantía. Despacho a domicilio con costo adicional por pedido; recojo en almacén sin costo. Las unidades se reservan por un plazo limitado hasta recibir el voucher de pago o, en Nuevos en liquidación, el registro del pedido Cálidda. Pagos solo a cuentas a nombre de Grupo Merpes Perú S.A.C. El producto se entrega con boleta o factura.</footer>
 </main>
 
 <div class="scrim" id="scrim" hidden></div>
@@ -248,14 +254,14 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
 <script>
 (function(){
   var PAGE = 48;
-  var state = { data:null, items:[], byId:{}, cond:'Liquidación', clave:'', linea:'', cat:'', q:'', sort:'rel', shown:PAGE, cart:{}, view:'cart', entrega:'Recojo', sending:false, lastOrder:null, payQuery:null, uploading:false, demoOrders:{} };
+  var state = { sup:null, supTmp:'', supVentas:null, data:null, items:[], byId:{}, cond:'Liquidación', clave:'', claveB2b:'', linea:'', cat:'', q:'', sort:'rel', shown:PAGE, cart:{}, view:'cart', entrega:'Recojo', sending:false, lastOrder:null, payQuery:null, uploading:false, demoOrders:{} };
   // Conexión con Apps Script: dentro de Apps Script usa google.script.run; publicada fuera (GitHub Pages) usa la URL /exec.
   var API_URL = window.OUTLET_API || '';
   function apiRun(){
     var ok=function(){}, ko=function(){}, o={
       withSuccessHandler:function(f){ ok=f; return o; },
       withFailureHandler:function(f){ ko=f; return o; } };
-    ['getCatalogo','registrarPedido','subirVoucher','consultarPedido'].forEach(function(fn){
+    ['getCatalogo','registrarPedido','subirVoucher','consultarPedido','loginSupervisor','supCambiarClave','supVentas','supSalir','supRegistrar'].forEach(function(fn){
       o[fn]=function(){
         var args=[].slice.call(arguments);
         fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args})})
@@ -276,21 +282,24 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   // Vistas de la tienda: Liquidación (público), Socios (con clave, precio socio), 2da selección (con clave)
   var VISTAS = {
     'Liquidación': { t:'Nuevos en liquidación', p:'Productos nuevos, en su empaque original, a precio de liquidación. Stock limitado.', priv:false },
+    'Liquidación B2B': { t:'Liquidación B2B · por lotes para empresas', p:'Ropa de cama y toallas Nubeflex en lotes para empresas (hoteles, clínicas, condominios, oficinas). Precio por unidad, con factura y pago por transferencia. Acceso con clave B2B.', priv:true, b2b:true },
     'Socios': { t:'Precios para socios', p:'Precios especiales para colaboradores de Grupo Merpes y de las empresas del grupo. Compra personal, con boleta o factura; no se permite la reventa. Despacho no incluido.', priv:true },
     '2da selección': { t:'Segunda selección', p:'Productos con observaciones, descritas en cada ficha con fotos reales de la unidad e informe descargable. Se venden en el estado mostrado y no incluyen garantía. Despacho no incluido.', priv:true }
   };
   function enVista(it, v){
     if (v==='2da selección') return it.condicion==='2da selección';
+    if (v==='Liquidación B2B') return it.condicion==='Liquidación B2B';
     if (v==='Socios') return (it.condicion==='Liquidación' && it.precioSocio>0) || it.condicion==='Socios';
     return it.condicion==='Liquidación';
   }
-  function modo(){ return state.cond==='Liquidación' ? 'P' : 'S'; }
+  function modo(){ return (state.cond==='Liquidación' || state.cond==='Liquidación B2B') ? 'P' : 'S'; }
   function precioDe(it, m){ return m==='S' ? (it.precioSocio || it.precio) : it.precio; }
   function keyOf(id, m){ return id+'|'+m; }
   function splitKey(k){ var i=k.lastIndexOf('|'); return i<0 ? {id:k,m:'P'} : {id:k.slice(0,i), m:k.slice(i+1)}; }
 
-  try{ state.clave = sessionStorage.getItem('merpesOutletClave')||''; }catch(e){}
-  function opts(){ return { clave: state.clave||'' }; }
+  try{ state.sup = JSON.parse(sessionStorage.getItem('merpesOutletSup')||'null'); }catch(e){}
+  try{ state.clave = sessionStorage.getItem('merpesOutletClave')||''; state.claveB2b = sessionStorage.getItem('merpesOutletClaveB2b')||''; }catch(e){}
+  function opts(){ return { clave: state.clave||'', claveB2b: state.claveB2b||'' }; }
   function loadCart(){ try{ var c = JSON.parse(localStorage.getItem('merpesOutletCart2')||'{}'); if(c && typeof c==='object') state.cart=c; }catch(e){} }
   function saveCart(){ try{ localStorage.setItem('merpesOutletCart2', JSON.stringify(state.cart)); }catch(e){} }
 
@@ -298,7 +307,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
 
   function setData(d){
     if (d && !live && window.OUTLET_DEMO){ d = Object.assign({}, d, { socios: state.clave==='SOCIOS' }); }
-    state.data = d; state.items = (d.items || []).filter(function(it){ return d.socios || (it.condicion==='Liquidación'); }); state.byId = {};
+    state.data = d; state.items = (d.items || []).filter(function(it){ return it.condicion==='Liquidación' || (it.condicion==='Liquidación B2B' ? !!d.b2b : !!d.socios); }); state.byId = {};
     state.items.forEach(function(it){ state.byId[it.id]=it; });
     $('storeName').textContent = d.tienda || 'Merpes Outlet';
     if (d.nota){ $('notice').textContent = d.nota; $('notice').hidden=false; } else { $('notice').hidden=true; }
@@ -360,7 +369,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       '<span class="stock'+(it.stock<=2?' low':'')+'">'+(it.stock===1?'Última unidad':'Quedan '+it.stock+' und')+(inCart?' · '+inCart+' en tu carrito':'')+'</span>';
     var img = it.imagen ? '<img src="'+esc(it.imagen)+'" alt="'+esc(it.nombre)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),{className:\'blank\'}))">' : '<div class="blank"></div>';
     return '<article class="card" data-id="'+esc(it.id)+'">'+
-      '<div class="ph">'+img+'<span class="tag '+(soc?'s':'n')+'">'+(soc?'Precio socio':'Nuevo')+'</span></div>'+
+      '<div class="ph">'+img+'<span class="tag '+(soc?'s':'n')+'">'+(soc?'Precio socio':(it.condicion==='Liquidación B2B'?'B2B':'Nuevo'))+'</span></div>'+
       '<div class="body"><span class="cat">'+esc(it.categoria)+' · '+esc(it.codigo)+'</span>'+
       '<div class="name" title="'+esc(it.nombre)+'">'+esc(it.nombre)+'</div>'+
       (soc && it.precio>p ? '<span class="was">Precio público '+fmt(it.precio)+'</span>' : '')+
@@ -411,9 +420,13 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !$('modal').hidden) cerrarDet(); });
 
   function render(){
+    if (state.sup && state.cond!=='Liquidación'){ state.cond='Liquidación'; }
+    document.querySelectorAll('.seg button').forEach(function(b){ b.hidden = !!state.sup && b.dataset.cond!=='Liquidación'; b.setAttribute('aria-pressed', b.dataset.cond===state.cond?'true':'false'); });
+    $('openSup').textContent = state.sup ? 'Supervisor: '+String(state.sup.nombre||'').split(' ')[0] : 'Supervisores';
     var v = VISTAS[state.cond] || VISTAS['Liquidación'];
-    var locked = v.priv && !(state.data && state.data.socios);
-    $('introT').textContent = v.t; $('introP').textContent = v.p;
+    var locked = v.priv && !(state.data && (v.b2b ? state.data.b2b : state.data.socios));
+    $('introT').textContent = v.t; $('introP').textContent = state.sup ? 'Modo supervisor Cálidda: el stock se actualiza en tiempo real. Agrega al carrito los productos de la venta de tu asesor y regístrala con el N° de pedido y la captura de Cálidda.' : v.p;
+    $('lockP').textContent = v.b2b ? 'Catálogo exclusivo para empresas. Ingresa la clave B2B que te entregó tu ejecutivo comercial de Grupo Merpes.' : 'Exclusivo para colaboradores de Grupo Merpes y empresas del grupo. Ingresa la clave que te entregó Recursos Humanos o tu jefe de área.';
     $('lock').hidden = !locked; $('grid').hidden = locked; $('lineas').hidden = locked;
     if (locked){ $('count').textContent = 'Acceso con clave'; $('moreBtn').hidden = true; return; }
     lineas();
@@ -461,10 +474,11 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   $('lockF').addEventListener('submit', function(e){ e.preventDefault();
     var k = $('lockK').value.trim(), er=$('lockE'); if(!k){ er.textContent='Ingresa la clave.'; er.hidden=false; return; }
     $('lockB').disabled=true; $('lockB').textContent='Verificando…';
+    var esB2b = !!(VISTAS[state.cond] && VISTAS[state.cond].b2b);
     var fin=function(d){ $('lockB').disabled=false; $('lockB').textContent='Ingresar';
-      if (d && d.socios){ er.hidden=true; try{ sessionStorage.setItem('merpesOutletClave', k); }catch(x){} setData(d); toast('Bienvenido'); }
-      else { state.clave=''; er.textContent='Clave incorrecta. Consulta con Recursos Humanos.'; er.hidden=false; } };
-    state.clave = k;
+      if (d && (esB2b ? d.b2b : d.socios)){ er.hidden=true; try{ sessionStorage.setItem(esB2b?'merpesOutletClaveB2b':'merpesOutletClave', k); }catch(x){} setData(d); toast('Bienvenido'); }
+      else { if (esB2b) state.claveB2b=''; else state.clave=''; er.textContent=esB2b?'Clave incorrecta. Consulta con tu ejecutivo comercial.':'Clave incorrecta. Consulta con Recursos Humanos.'; er.hidden=false; } };
+    if (esB2b) state.claveB2b = k; else state.clave = k;
     if (live) runner().withSuccessHandler(fin).withFailureHandler(function(){ fin(null); }).getCatalogo(opts());
     else setTimeout(function(){ fin(k==='SOCIOS' ? Object.assign({}, window.OUTLET_DEMO, {socios:true}) : null); }, 300);
   });
@@ -478,8 +492,9 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   function despacho(){ return state.entrega==='Despacho' ? Number((state.data&&state.data.despacho)||0) : 0; }
   function openCart(view){ state.view = view||'cart'; renderCart(); $('scrim').hidden=false; $('drawer').hidden=false; }
   function closeCart(){ $('scrim').hidden=true; $('drawer').hidden=true; if (state.view==='done'){ state.view='cart'; } }
-  $('openCart').addEventListener('click', function(){ openCart(state.view==='done'||state.view==='pay'?'cart':state.view); });
+  $('openCart').addEventListener('click', function(){ openCart(state.view==='done'||state.view==='pay'||state.view==='sup'||state.view==='supok'?'cart':state.view); });
   $('openPay').addEventListener('click', function(){ openCart('pay'); });
+  $('openSup').addEventListener('click', function(){ openCart('sup'); if (state.sup) supCargarVentas(); });
   $('closeCart').addEventListener('click', closeCart); $('scrim').addEventListener('click', closeCart);
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !$('drawer').hidden) closeCart(); });
 
@@ -491,14 +506,22 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       var o = state.lastOrder;
       $('dTitle').textContent='Pedido reservado';
       body.innerHTML = '<div class="okbox"><h3>'+esc(o.numero)+'</h3>'+
-        '<p>Total a pagar: <b>'+fmt(o.total)+'</b> (inc. IGV'+(o.despacho?', incluye despacho '+fmt(o.despacho):'')+'). Reservamos tus unidades'+(o.vence?' hasta el <b>'+esc(o.vence)+'</b>':'')+'.</p>'+
-        payBlock(o.numero, o.total)+ voucherForm(o.numero, o.documento)+
+        '<p>'+(o.canal==='Cálidda'?'Total del pedido':'Total a pagar')+': <b>'+fmt(o.total)+'</b> (inc. IGV'+(o.despacho?', incluye despacho '+fmt(o.despacho):'')+'). Reservamos tus unidades'+(o.vence?' hasta el <b>'+esc(o.vence)+'</b>':'')+'.</p>'+
+        (o.canal==='Cálidda' ? calBlock()+calForm(o.numero, o.documento) : payBlock(o.numero, o.total)+ voucherForm(o.numero, o.documento))+
         (o.correoEnviado ? '<p class="lm">Enviamos el pedido a nuestro correo de ventas'+(o.copia?' y los datos de pago a tu correo':'')+'.</p>' : '')+
         (o.whatsapp ? '<a class="btn accent" href="'+esc(o.whatsapp)+'" target="_blank" rel="noopener">Avisar por WhatsApp</a>' : '')+
         '</div>';
       foot.innerHTML = '<button class="btn" type="button" id="keep">Seguir comprando</button>';
       $('keep').onclick = function(){ state.view='cart'; closeCart(); };
       bindVoucher(); return;
+    }
+    if (state.view==='sup'){ renderSup(); return; }
+    if (state.view==='supok' && state.lastOrder){
+      $('dTitle').textContent='Venta registrada';
+      body.innerHTML = '<div class="okbox"><h3>'+esc(state.lastOrder.numero)+'</h3><p>Venta Cálidda N° <b>'+esc(state.lastOrder.cal)+'</b> registrada por '+fmt(state.lastOrder.total)+'. El stock quedó inmovilizado.</p>'+
+        (state.lastOrder.obs && state.lastOrder.obs.length?'<p class="err" style="display:block">Logística revisará: '+esc(state.lastOrder.obs.join(' · '))+'.</p>':'')+'</div>';
+      foot.innerHTML = '<button class="btn primary" type="button" id="keep">Registrar otra venta</button>';
+      $('keep').onclick = function(){ state.view='cart'; closeCart(); }; return;
     }
     if (state.view==='pay'){
       $('dTitle').textContent='Pagar o consultar pedido';
@@ -513,21 +536,25 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       $('pq').addEventListener('submit', function(e){ e.preventDefault(); buscarPedido(); });
       bindVoucher(); return;
     }
-    var cartSoc = lines.some(function(l){ return l.m==='S'; }), costoDesp = Number((state.data&&state.data.despacho)||0);
+    var cartSoc = lines.some(function(l){ return l.m==='S'; }), cartB2b = lines.some(function(l){ return l.it.condicion==='Liquidación B2B'; }),
+      soloLiq = lines.length && lines.every(function(l){ return l.it.condicion==='Liquidación' && l.m==='P'; }), costoDesp = Number((state.data&&state.data.despacho)||0);
+    if (state.view==='checkout' && state.sup){ renderSupVenta(lines, sub); return; }
     if (state.view==='checkout' && lines.length){
       $('dTitle').textContent='Datos del pedido';
       var dsp = despacho();
       body.innerHTML = '<form class="co" id="co" novalidate>'+
         '<div class="fld"><label>Soy</label><div class="radio">'+
-          (cartSoc ? '' : '<label><input type="radio" name="tipo" value="Cliente externo" checked> Cliente</label>')+
+          (cartB2b ? '<label><input type="radio" name="tipo" value="Empresa · compra B2B" checked> Empresa (B2B)</label>' : '')+
+          (cartSoc || cartB2b ? '' : '<label><input type="radio" name="tipo" value="Cliente externo" checked> Cliente</label>')+
           (state.data && state.data.socios ? '<label><input type="radio" name="tipo" value="Socio · colaborador Merpes"'+(cartSoc?' checked':'')+'> Socio · colaborador</label>'+
           '<label><input type="radio" name="tipo" value="Socio · empresa del grupo"> Socio · empresa del grupo</label>' : '')+'</div>'+
-          (cartSoc ? '<p class="lm">Tu carrito tiene productos con precio exclusivo para colaboradores y empresas del grupo.</p>' : '')+'</div>'+
+          (cartSoc ? '<p class="lm">Tu carrito tiene productos con precio exclusivo para colaboradores y empresas del grupo.</p>' : '')+
+          (soloLiq ? '<p class="lm"><b>Venta con Cálidda:</b> registra los datos del cliente final. Al confirmar, sube el N° y la captura del pedido cerrado en la plataforma Cálidda.</p>' : '')+'</div>'+
         '<div class="fld"><label>Entrega</label><div class="radio">'+
           '<label><input type="radio" name="entrega" value="Recojo"'+(state.entrega==='Recojo'?' checked':'')+'> Recojo en almacén (sin costo)</label>'+
           '<label><input type="radio" name="entrega" value="Despacho"'+(state.entrega==='Despacho'?' checked':'')+'> Despacho a domicilio (+'+fmt(costoDesp)+')</label></div></div>'+
         '<div class="fld"><label for="f-nombre">Nombre y apellidos / razón social</label><input id="f-nombre" name="nombre" autocomplete="name" required></div>'+
-        '<div class="two"><div class="fld"><label for="f-doc" id="l-doc">'+(cartSoc?'DNI o código de trabajador':'DNI o RUC')+'</label><input id="f-doc" name="documento" required></div>'+
+        '<div class="two"><div class="fld"><label for="f-doc" id="l-doc">'+(cartB2b?'RUC de la empresa':(cartSoc?'DNI o código de trabajador':'DNI o RUC'))+'</label><input id="f-doc" name="documento" required></div>'+
         '<div class="fld"><label for="f-tel">Teléfono / WhatsApp</label><input id="f-tel" name="telefono" inputmode="tel" autocomplete="tel" required></div></div>'+
         '<div class="fld"><label for="f-mail">Correo</label><input id="f-mail" name="correo" type="email" autocomplete="email"></div>'+
         '<div class="fld"><label for="f-dir" id="l-dir">'+(state.entrega==='Despacho'?'Dirección de entrega (distrito y referencia)':(cartSoc?'Área / empresa (opcional)':'Dirección (opcional)'))+'</label><input id="f-dir" name="direccion"></div>'+
@@ -541,7 +568,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       var f=$('co');
       f.addEventListener('change', function(e){
         if(e.target.name==='tipo'){ var v=e.target.value;
-          $('l-doc').textContent = v==='Cliente externo'?'DNI o RUC':(v.indexOf('empresa')>0?'RUC de la empresa':'DNI o código de trabajador'); }
+          $('l-doc').textContent = v==='Cliente externo'?'DNI o RUC':(/empresa/i.test(v)?'RUC de la empresa':'DNI o código de trabajador'); }
         if(e.target.name==='entrega'){ var fd=leer(f); state.entrega=e.target.value; renderCart(); keepForm(fd); } });
       f.addEventListener('submit', function(e){ e.preventDefault(); submit(); });
       $('send').onclick = submit; $('send').disabled = state.sending;
@@ -553,7 +580,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     if (!lines.length){ body.innerHTML='<div class="empty">Tu carrito está vacío.<br>Agrega productos desde el catálogo.</div>'; foot.innerHTML=''; return; }
     body.innerHTML = lines.map(function(l){ var it=l.it, max=l.q+libre(it);
       return '<div class="line" data-k="'+esc(l.k)+'"><div class="th">'+(it.imagen?'<img src="'+esc(it.imagen)+'" alt="" referrerpolicy="no-referrer" onerror="this.remove()">':'')+'</div>'+
-        '<div><div class="ln">'+esc(it.nombre)+'</div><div class="lm">'+(it.condicion==='2da selección'?'2da selección · Serie '+esc(it.serie):(l.m==='S'?'Precio socio':'Precio público'))+' · '+fmt(l.p)+' c/u</div>'+
+        '<div><div class="ln">'+esc(it.nombre)+'</div><div class="lm">'+(it.condicion==='2da selección'?'2da selección · Serie '+esc(it.serie):(l.m==='S'?'Precio socio':(it.condicion==='Liquidación B2B'?'Liquidación B2B':'Precio público')))+' · '+fmt(l.p)+' c/u</div>'+
         '<div class="qty" style="margin-top:6px;width:max-content"><button type="button" data-a="dec" '+(l.q<=1?'disabled':'')+'>−</button><input type="number" value="'+l.q+'" aria-label="Cantidad" readonly><button type="button" data-a="inc" '+(l.q>=max?'disabled':'')+'>+</button></div></div>'+
         '<div class="lr">'+fmt(l.q*l.p)+'<button type="button" class="rm" data-a="rm">Quitar</button></div></div>'; }).join('');
     foot.innerHTML = '<div class="tot"><span>Total productos ('+units+' und)</span><b>'+fmt(sub)+'</b></div>'+
@@ -581,7 +608,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     if (state.entrega==='Despacho' && !fd.direccion) miss.push('dirección de entrega');
     if (miss.length){ err.textContent='Completa: '+miss.join(', ')+'.'; err.hidden=false; return; }
     err.hidden=true;
-    var pedido = { clave: state.clave||'', cliente: fd, entrega: state.entrega, lineas: cartLines().map(function(l){ return {id:l.it.id, cantidad:l.q, socio:l.m==='S'}; }) };
+    var pedido = { clave: state.clave||'', claveB2b: state.claveB2b||'', cliente: fd, entrega: state.entrega, lineas: cartLines().map(function(l){ return {id:l.it.id, cantidad:l.q, socio:l.m==='S'}; }) };
     state.sending=true; renderCart(); keepForm(fd);
     var done = function(r){
       state.sending=false;
@@ -590,7 +617,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
         if (r && r.sinStock){ state.view='cart'; renderCart(); toast(r.error); } return; }
       cerrarDet();
       state.cart={}; saveCart();
-      state.lastOrder={numero:r.numero,total:r.total,despacho:r.despacho||0,vence:r.vence,documento:fd.documento,whatsapp:r.whatsapp,correoEnviado:r.correoEnviado,copia:!!fd.correo};
+      state.lastOrder={numero:r.numero,total:r.total,despacho:r.despacho||0,vence:r.vence,documento:fd.documento,whatsapp:r.whatsapp,correoEnviado:r.correoEnviado,copia:!!fd.correo,canal:r.canal||''};
       state.view='done'; render(); renderCart();
     };
     if (live){ runner().withSuccessHandler(done).withFailureHandler(function(){ done({ok:false,error:'Se perdió la conexión. Revisa tu internet e inténtalo de nuevo.'}); }).registrarPedido(pedido); }
@@ -605,7 +632,166 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     var dsp = p.entrega==='Despacho' ? Number(state.data.despacho||0) : 0; total+=dsp;
     var v=new Date(Date.now()+((state.data&&state.data.plazoHoras)||24)*3600000);
     state.demoOrders['MO-VISTA-PREVIA']={doc:p.cliente.documento,total:total,estado:'Pendiente de pago'};
-    return {ok:true,numero:'MO-VISTA-PREVIA',total:total,despacho:dsp,vence:v.toLocaleString('es-PE',{dateStyle:'short',timeStyle:'short'}),whatsapp:'',correoEnviado:false,catalogo:state.data};
+    var demoCal = p.lineas.every(function(l){ var it=state.byId[l.id]; return it && it.condicion==='Liquidación' && !l.socio; });
+    state.demoOrders['MO-VISTA-PREVIA'].canal = demoCal ? 'Cálidda' : 'Transferencia';
+    return {ok:true,canal:demoCal?'Cálidda':'Transferencia',numero:'MO-VISTA-PREVIA',total:total,despacho:dsp,vence:v.toLocaleString('es-PE',{dateStyle:'short',timeStyle:'short'}),whatsapp:'',correoEnviado:false,catalogo:state.data};
+  }
+
+  // ── Supervisores Cálidda: ingreso, registro de ventas y ventas registradas ──
+  function supCall(fn, args, ok){
+    if (!live){ ok({ok:false,error:'Disponible solo en la tienda publicada.'}); return; }
+    var r = runner().withSuccessHandler(function(x){ ok(x); }).withFailureHandler(function(e){ var m=String(e&&e.message||e);
+      if (m.indexOf('SESION:')>=0){ supFin(); ok({ok:false,error:'Tu sesión expiró. Vuelve a ingresar.'}); } else ok({ok:false,error:m}); });
+    r[fn].apply(r, args);
+  }
+  function supFin(){ state.sup=null; state.supVentas=null; try{ sessionStorage.removeItem('merpesOutletSup'); }catch(e){} render(); }
+  function supCargarVentas(){ supCall('supVentas', [state.sup.token], function(r){ if (r && r.ok){ state.supVentas=r.ventas; if (state.view==='sup') renderCart(); } }); }
+  function renderSup(){
+    var body=$('dBody'), foot=$('dFoot');
+    if (state.sup && !state.sup.debeCambiar){
+      $('dTitle').textContent='Supervisor Cálidda';
+      var v = state.supVentas;
+      body.innerHTML = '<p class="lm">Hola <b>'+esc(state.sup.nombre)+'</b>. Para registrar una venta agrega los productos al carrito y pulsa "Continuar".</p><h4 style="margin:12px 0 6px">Mis ventas registradas</h4>'+
+        (v==null?'<div class="lm">Cargando…</div>':(v.length?v.map(function(x){ return '<div class="line" style="grid-template-columns:1fr auto"><div><div class="ln">'+esc(x.numero)+' · Cálidda '+esc(x.cal)+'</div><div class="lm">'+esc(x.fecha)+' · '+esc(x.cliente)+' · '+esc(x.estado)+'</div></div><div class="lr">'+fmt(x.total)+(x.captura?'<a class="lm" href="'+esc(x.captura)+'" target="_blank" rel="noopener">Captura</a>':'')+'</div></div>'; }).join(''):'<div class="empty">Aún no registras ventas.</div>'));
+      foot.innerHTML = '<button class="btn primary" type="button" id="supNew">Registrar venta</button><button class="btn" type="button" id="supOut">Cerrar sesión</button>';
+      $('supNew').onclick = function(){ state.view='checkout'; renderCart(); };
+      $('supOut').onclick = function(){ var t=state.sup.token; supFin(); supCall('supSalir',[t],function(){}); closeCart(); toast('Sesión cerrada'); };
+      return;
+    }
+    if (state.sup && state.sup.debeCambiar){
+      $('dTitle').textContent='Configura tu acceso';
+      body.innerHTML = '<form class="co" id="supP" novalidate><p class="lm">Es tu primer ingreso: define tu clave personal (mínimo 8 caracteres, con letras y números) y un correo para recuperarla.</p>'+
+        '<div class="fld"><label for="sp-n">Nueva clave</label><input id="sp-n" type="password" autocomplete="new-password"></div>'+
+        '<div class="fld"><label for="sp-r">Repite la nueva clave</label><input id="sp-r" type="password" autocomplete="new-password"></div>'+
+        '<div class="fld"><label for="sp-m">Correo</label><input id="sp-m" type="email" value="'+esc(state.sup.correo||'')+'"></div>'+
+        '<button class="btn primary" type="submit" id="spGo">Guardar</button><div class="err" id="spE" hidden></div></form>';
+      foot.innerHTML='';
+      $('supP').addEventListener('submit', function(e){ e.preventDefault(); var er=$('spE'), n=$('sp-n').value, r2=$('sp-r').value, m=$('sp-m').value.trim();
+        if (n!==r2){ er.textContent='Las claves no coinciden.'; er.hidden=false; return; }
+        $('spGo').disabled=true;
+        supCall('supCambiarClave',[state.sup.token, state.supTmp, n, m], function(r){ $('spGo').disabled=false;
+          if (!r || !r.ok){ er.textContent=(r&&r.error)||'No se pudo guardar.'; er.hidden=false; return; }
+          state.sup.debeCambiar=false; state.supTmp=''; try{ sessionStorage.setItem('merpesOutletSup', JSON.stringify(state.sup)); }catch(x){}
+          toast('Acceso configurado'); render(); renderCart(); supCargarVentas(); }); });
+      return;
+    }
+    $('dTitle').textContent='Acceso supervisores Cálidda';
+    body.innerHTML = '<form class="co" id="supL" novalidate><p class="lm">Exclusivo para supervisores del canal Cálidda. Usa el usuario y la clave que te entregó Logística.</p>'+
+      '<div class="fld"><label for="sl-u">Usuario</label><input id="sl-u" autocapitalize="none" autocomplete="username"></div>'+
+      '<div class="fld"><label for="sl-p">Clave</label><input id="sl-p" type="password" autocomplete="current-password"></div>'+
+      '<button class="btn primary" type="submit" id="slGo">Ingresar</button><div class="err" id="slE" hidden></div>'+
+      '<p class="lm">¿Olvidaste tu clave? Pide a Logística una clave temporal.</p></form>';
+    foot.innerHTML='';
+    $('supL').addEventListener('submit', function(e){ e.preventDefault(); var er=$('slE'), u=$('sl-u').value.trim(), pw=$('sl-p').value;
+      if (!u || !pw){ er.textContent='Ingresa usuario y clave.'; er.hidden=false; return; }
+      $('slGo').disabled=true; $('slGo').textContent='Verificando…';
+      supCall('loginSupervisor',[u,pw], function(r){ $('slGo').disabled=false; $('slGo').textContent='Ingresar';
+        if (!r || !r.ok){ er.textContent=(r&&r.error)||'No se pudo ingresar.'; er.hidden=false; return; }
+        state.sup={token:r.token, usuario:r.usuario, nombre:r.nombre, correo:r.correo, debeCambiar:!!r.debeCambiar}; state.supTmp=pw;
+        if (!r.debeCambiar){ try{ sessionStorage.setItem('merpesOutletSup', JSON.stringify(state.sup)); }catch(x){} }
+        state.cart={}; saveCart(); state.cond='Liquidación'; render(); renderCart(); if (!r.debeCambiar){ toast('Bienvenido, '+String(r.nombre).split(' ')[0]); supCargarVentas(); } }); });
+  }
+  function hoyISO(d){ d=d||new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); }
+  // Formulario de venta Cálidda: "Leer capturas" (llena todo desde las imágenes) o "Llenado manual"
+  var SF_CAMPOS = ['calNum','fecha','estado','importe','nombre','documento','telefono','contrato','despacho','direccion','asesor'];
+  function sfNuevo(){ state.supForm = { modo:'leer', fecha:hoyISO(), estado:'Pendiente de entrega', despacho:'Delivery a domicilio', leidos:{}, avisos:[], lecturaId:'', leyendo:false }; }
+  function sfGuardar(){ var f=$('sv'); if(!f) return; SF_CAMPOS.forEach(function(k){ if (f.elements[k]) state.supForm[k]=f.elements[k].value; }); }
+  function renderSupVenta(lines, sub){
+    var body=$('dBody'), foot=$('dFoot'), F=state.supForm || (sfNuevo(), state.supForm), L=F.leidos||{};
+    $('dTitle').textContent='Registrar venta Cálidda';
+    var otros = lines.filter(function(l){ return l.it.condicion!=='Liquidación' || l.m!=='P'; });
+    var hoy=hoyISO(), min=hoyISO(new Date(Date.now()-3*86400000));
+    var tag=function(k){ return L[k] ? ' <span class="leido">leído</span>' : ''; };
+    var inp=function(k, lab, extra){ return '<div class="fld"><label for="sv-'+k+'">'+lab+tag(k)+'</label><input id="sv-'+k+'" name="'+k+'" value="'+esc(F[k]==null?'':F[k])+'" '+(extra||'')+'></div>'; };
+    var estados=['Pendiente de entrega','Entregado','Entrega confirmada','Anulado','Otro'];
+    var estadoMal = L.estado && F.estado!=='Pendiente de entrega';
+    body.innerHTML =
+      '<div class="seg2"><button type="button" data-m="leer" aria-pressed="'+(F.modo==='leer')+'">Leer capturas</button><button type="button" data-m="manual" aria-pressed="'+(F.modo==='manual')+'">Llenado manual</button></div>'+
+      (F.modo==='leer' ?
+        '<div class="pay"><h4>1. Sube las capturas de la plataforma Cálidda</h4><p class="lm">La web lee el N° de pedido, cliente, DNI, fecha, importe, estado y productos. Luego revisas y registras.</p>'+
+        '<div class="fld"><label for="cap1">Detalle del pedido ("Ver Financiamiento" con productos)</label><input id="cap1" type="file" accept="image/*,application/pdf"></div>'+
+        '<div class="fld"><label for="cap2">Fila de la lista de pedidos (con el Estado)</label><input id="cap2" type="file" accept="image/*,application/pdf"></div>'+
+        '<button class="btn primary" type="button" id="leer"'+(F.leyendo?' disabled':'')+'>'+(F.leyendo?'Leyendo capturas…':'Leer capturas')+'</button></div>'
+        : '<p class="lm">Llenado manual: úsalo si no tienes la captura o salió borrosa. Agrega los productos desde el catálogo y completa los datos. Las ventas sin captura se revisan antes del despacho.</p>')+
+      (F.avisos && F.avisos.length ? '<div class="avisos">'+F.avisos.map(function(a){ return '<div>• '+esc(a)+'</div>'; }).join('')+'</div>' : '')+
+      '<form class="co" id="sv" novalidate>'+
+      '<h4 style="margin:6px 0 0">'+(F.modo==='leer'?'2. ':'')+'Productos</h4>'+
+      (lines.length ? '<div class="lm">'+lines.map(function(l){ return l.q+' × '+esc(l.it.nombre)+' — '+fmt(l.q*l.p); }).join('<br>')+'</div>' : '<div class="lm">'+(F.modo==='leer'?'Se agregan al leer la captura. ':'')+'También puedes cerrar este panel y agregarlos desde el catálogo.</div>')+
+      (otros.length ? '<div class="err" style="display:block">Solo se registran productos de Nuevos en liquidación. Quita del carrito: '+otros.map(function(l){ return esc(l.it.nombre); }).join(', ')+'.</div>' : '')+
+      '<h4 style="margin:6px 0 0">'+(F.modo==='leer'?'3. Revisa los datos':'Datos del pedido')+'</h4>'+
+      '<div class="two">'+inp('calNum','N° de pedido de venta Cálidda','inputmode="numeric" placeholder="ej. 1009420558"')+
+        '<div class="fld"><label for="sv-fecha">Fecha de venta'+tag('fecha')+'</label><input id="sv-fecha" name="fecha" type="date" max="'+hoy+'" value="'+esc(F.fecha||'')+'"></div></div>'+
+      '<div class="two"><div class="fld"><label for="sv-estado">Estado en Cálidda'+tag('estado')+'</label><select id="sv-estado" name="estado"'+(L.estado?' disabled':'')+'>'+estados.map(function(e){ return '<option'+(F.estado===e?' selected':'')+'>'+e+'</option>'; }).join('')+'</select></div>'+
+        inp('importe','Importe en Cálidda S/','type="number" step="0.01" min="0" placeholder="'+sub.toFixed(2)+'"')+'</div>'+
+      (estadoMal ? '<div class="err" style="display:block">La captura muestra el pedido como <b>'+esc(F.estado)+'</b>. Solo se registran pedidos "Pendiente de entrega".</div>' : '')+
+      (F.fecha && F.fecha < min ? '<div class="err" style="display:block">La fecha de venta tiene más de 3 días: no se podrá registrar.</div>' : '')+
+      inp('nombre','Cliente')+
+      '<div class="two">'+inp('documento','DNI','inputmode="numeric"')+inp('telefono','Teléfono','inputmode="tel"')+'</div>'+
+      '<div class="two">'+inp('contrato','Cuenta contrato','inputmode="numeric"')+
+        '<div class="fld"><label for="sv-despacho">Tipo de despacho'+tag('despacho')+'</label><select id="sv-despacho" name="despacho">'+['Delivery a domicilio','Recojo en tienda'].map(function(e){ return '<option'+(F.despacho===e?' selected':'')+'>'+e+'</option>'; }).join('')+'</select></div></div>'+
+      inp('direccion','Dirección de entrega')+inp('asesor','Asesor (vendedor)')+
+      (F.modo==='manual' ? '<div class="fld"><label for="sv-x">Captura del pedido (opcional, imagen o PDF)</label><input id="sv-x" name="archivo" type="file" accept="image/*,application/pdf"></div>' : '')+
+      '<div class="err" id="svE" hidden></div></form>';
+    foot.innerHTML = '<div class="tot"><span>Total precio Cálidda</span><b>'+fmt(sub)+'</b></div>'+
+      '<button class="btn primary" type="button" id="svGo">'+(state.sending?'Registrando…':'Registrar venta')+'</button>'+
+      '<button class="btn" type="button" id="svNew">Limpiar formulario</button>';
+    body.querySelectorAll('.seg2 button').forEach(function(b){ b.onclick=function(){ sfGuardar(); state.supForm.modo=b.dataset.m; renderCart(); }; });
+    $('sv').addEventListener('input', sfGuardar); $('sv').addEventListener('change', function(e){ sfGuardar(); if (e.target.name==='fecha') renderCart(); });
+    if ($('leer')) $('leer').onclick=supLeer;
+    $('svNew').onclick=function(){ sfNuevo(); state.cart={}; saveCart(); render(); renderCart(); };
+    $('svGo').disabled = state.sending || !lines.length || otros.length>0; $('svGo').onclick=function(){ supEnviar(lines); };
+  }
+  // Reduce el tamaño de las imágenes antes de enviarlas (más rápido y suficiente para la lectura)
+  function prepArchivo(file, cb){
+    if (!file) { cb(null); return; }
+    var rd=new FileReader();
+    rd.onload=function(){
+      if (!/^image\//.test(file.type) || /heic|heif/i.test(file.type)) { cb({nombre:file.name, tipo:file.type, base64:String(rd.result).split(',')[1]}); return; }
+      var img=new Image(); img.onload=function(){
+        var k=Math.min(1, 2400/Math.max(img.width,img.height)), c=document.createElement('canvas'); c.width=Math.round(img.width*k); c.height=Math.round(img.height*k);
+        var g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height); g.drawImage(img,0,0,c.width,c.height);
+        cb({nombre:file.name.replace(/\.\w+$/,'')+'.jpg', tipo:'image/jpeg', base64:c.toDataURL('image/jpeg',0.92).split(',')[1]}); };
+      img.onerror=function(){ cb({nombre:file.name, tipo:file.type, base64:String(rd.result).split(',')[1]}); };
+      img.src=rd.result; };
+    rd.readAsDataURL(file);
+  }
+  function supLeer(){
+    var F=state.supForm, a=$('cap1').files[0], b=$('cap2').files[0], er=$('svE');
+    if (!a && !b){ F.avisos=['Sube al menos una captura (lo ideal son las dos).']; renderCart(); return; }
+    if ((a&&a.size>8*1024*1024)||(b&&b.size>8*1024*1024)){ F.avisos=['Cada captura debe pesar menos de 8 MB.']; renderCart(); return; }
+    F.leyendo=true; F.avisos=[]; renderCart();
+    prepArchivo(a, function(fa){ prepArchivo(b, function(fb){
+      supCall('supLeerCapturas',[state.sup.token,[fa,fb].filter(Boolean)], function(r){
+        F.leyendo=false;
+        if (!r || !r.ok){ F.avisos=[(r&&r.error)||'No se pudo leer la captura. Usa el llenado manual.']; renderCart(); return; }
+        var c=r.campos, map={calNum:'calNum',fecha:'fecha',estado:'estado',importe:'importe',nombre:'cliente',documento:'dni',telefono:'telefono',contrato:'contrato',despacho:'despacho',asesor:'asesor'};
+        F.leidos={}; Object.keys(map).forEach(function(k){ var v=c[map[k]]; if (v!=='' && v!=null){ F[k]=String(v); F.leidos[k]=true; } });
+        F.lecturaId=r.lecturaId; F.avisos=r.avisos||[];
+        state.cart={}; (r.lineas||[]).forEach(function(l){ if (state.byId[l.id]) state.cart[keyOf(l.id,'P')] = Math.min(l.cantidad, Math.max(1, state.byId[l.id].stock)); });
+        saveCart(); render(); renderCart(); toast('Captura leída: revisa los datos');
+      }); }); });
+  }
+  function supEnviar(lines){
+    if (state.sending) return;
+    sfGuardar();
+    var F=state.supForm, er=$('svE'), fx=$('sv-x') ? $('sv-x').files[0] : null;
+    var d={ lineas: lines.map(function(l){ return {id:l.it.id, cantidad:l.q}; }), calNum: String(F.calNum||'').trim(), fechaVenta: F.fecha, estadoCal: F.estado,
+      importe: Number(F.importe), despacho: F.despacho, asesor: String(F.asesor||'').trim(), lecturaId: F.lecturaId||'',
+      cliente: { nombre: String(F.nombre||'').trim(), documento: String(F.documento||'').trim(), telefono: String(F.telefono||'').trim(), contrato: String(F.contrato||'').trim(), direccion: String(F.direccion||'').trim() } };
+    var falta=[]; if(!d.calNum) falta.push('N° de pedido'); if(!d.fechaVenta) falta.push('fecha de venta'); if(!(d.importe>0)) falta.push('importe');
+    if(!d.cliente.nombre) falta.push('cliente'); if(!d.cliente.documento) falta.push('DNI'); if(d.cliente.telefono.replace(/\D/g,'').length<9) falta.push('teléfono (9 dígitos)');
+    if(d.despacho==='Delivery a domicilio' && !d.cliente.direccion) falta.push('dirección');
+    if (falta.length){ er.textContent='Completa: '+falta.join(', ')+'.'; er.hidden=false; return; }
+    if (F.modo==='manual' && !fx && !F.lecturaId && !confirm('Vas a registrar la venta sin captura. Logística la revisará antes del despacho. ¿Continuar?')) return;
+    er.hidden=true; state.sending=true; $('svGo').disabled=true; $('svGo').textContent='Registrando…';
+    prepArchivo(fx, function(fa){ if (fa) d.archivo=fa;
+      supCall('supRegistrar',[state.sup.token, d], function(r){ state.sending=false;
+        if (!r || !r.ok){ if (!state.sup){ openCart('sup'); toast((r&&r.error)||'Vuelve a ingresar.'); return; }
+          renderCart(); var e2=$('svE'); e2.textContent=(r&&r.error)||'No se pudo registrar.'; e2.hidden=false;
+          if (r && r.stock) load(); return; }
+        if (r.catalogo) setData(r.catalogo);
+        state.cart={}; saveCart(); state.supVentas=null; sfNuevo();
+        state.lastOrder={numero:r.numero, total:r.total, cal:d.calNum, difImporte:r.difImporte, obs:r.observaciones||[]}; state.view='supok'; render(); renderCart(); }); });
   }
 
   // ── Pago: datos de cuentas, voucher y consulta ──
@@ -632,9 +818,31 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       '<div class="err" id="vErr" hidden></div><div class="ok" id="vOk" hidden></div>'+
       '<p class="lm">Tesorería valida el abono en el banco y te confirmaremos el pago. La entrega se realiza con boleta o factura.</p></form>';
   }
+  // Venta con Cálidda: el N° y la captura del pedido cerrado en la plataforma Cálidda hacen las veces de pago
+  function calBlock(){
+    var h = (state.data && state.data.plazoHoras) || 24;
+    return '<div class="pay"><h4>Registrar pedido Cálidda</h4>'+
+      '<ol class="steps"><li>Cierra el pedido en la plataforma Cálidda con los datos del cliente final.</li><li>Toma una captura del pedido donde se vean el N° de pedido, el cliente y la dirección.</li><li>Súbela aquí con el N° de pedido Cálidda dentro de las '+h+' horas.</li></ol></div>';
+  }
+  function calForm(numero, documento){
+    return '<form class="pay co" id="vf" data-cal="1" data-num="'+esc(numero)+'" data-doc="'+esc(documento||'')+'" novalidate><h4>Pedido Cálidda</h4>'+
+      '<input type="hidden" name="medio" value="Pedido Cálidda">'+
+      '<div class="fld"><label for="v-op">N° de pedido en la plataforma Cálidda</label><input id="v-op" name="operacion" inputmode="numeric"></div>'+
+      '<div class="two"><div class="fld"><label for="v-fec">Fecha de venta en Cálidda</label><input id="v-fec" name="fecha" type="date"></div>'+
+      '<div class="fld"><label for="v-est">Estado en Cálidda</label><select id="v-est" name="estado"><option>Pendiente de entrega</option><option>Entregado</option><option>Otro</option></select></div></div>'+
+      '<div class="fld"><label for="v-file">Captura del pedido (imagen o PDF, máx. 5 MB)</label><input id="v-file" name="archivo" type="file" accept="image/*,application/pdf"></div>'+
+      '<button class="btn primary" type="submit" id="vGo">'+(state.uploading?'Registrando…':'Registrar pedido Cálidda')+'</button>'+
+      '<div class="err" id="vErr" hidden></div><div class="ok" id="vOk" hidden></div>'+
+      '<p class="lm">Con este registro el pedido queda confirmado para la entrega.</p></form>';
+  }
   function pedidoInfo(r, documento){
     var e = String(r.estado||'');
     var head = '<div class="pay"><h4>'+esc(r.numero)+'</h4><div>Estado: <b>'+esc(e)+'</b> · Total '+fmt(r.total)+'</div>'+(r.vence && e==='Pendiente de pago'?'<div class="lm">Reserva vigente hasta '+esc(r.vence)+'</div>':'')+'</div>';
+    if (r.canal==='Cálidda'){
+      if (e==='Pendiente de pago') return head + calBlock() + calForm(r.numero, documento);
+      if (e==='Pagado') return head + '<div class="pay"><div class="lm">Pedido Cálidda registrado. Coordinaremos la entrega.</div></div>';
+      return head;
+    }
     if (e==='Pendiente de pago' || e==='Voucher recibido') return head + payBlock(r.numero, r.total) + voucherForm(r.numero, documento);
     return head;
   }
@@ -644,7 +852,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     state.payQuery={numero:num,documento:doc}; state.sending=true; renderCart();
     var fin=function(r){ state.sending=false; if(r && r.ok){ state.payQuery.res=r; renderCart(); } else { renderCart(); var e=$('qErr'); e.textContent=(r&&r.error)||'No pudimos consultar el pedido.'; e.hidden=false; } };
     if (live) runner().withSuccessHandler(fin).withFailureHandler(function(){ fin({ok:false,error:'Se perdió la conexión. Inténtalo de nuevo.'}); }).consultarPedido(num, doc);
-    else setTimeout(function(){ var d=state.demoOrders[num]; fin(d && d.doc===doc ? {ok:true,numero:num,total:d.total,estado:d.estado,vence:''} : {ok:false,error:'No encontramos ese número de pedido.'}); }, 300);
+    else setTimeout(function(){ var d=state.demoOrders[num]; fin(d && d.doc===doc ? {ok:true,numero:num,total:d.total,estado:d.estado,vence:'',canal:d.canal} : {ok:false,error:'No encontramos ese número de pedido.'}); }, 300);
   }
   function bindVoucher(){
     var f=$('vf'); if(!f) return;
@@ -652,24 +860,28 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
   }
   function enviarVoucher(f){
     if (state.uploading) return;
-    var err=$('vErr'), ok=$('vOk'), file=f.elements.archivo.files[0], op=f.elements.operacion.value.trim(), medio=f.elements.medio.value;
+    var err=$('vErr'), ok=$('vOk'), file=f.elements.archivo.files[0], op=f.elements.operacion.value.trim(), medio=f.elements.medio.value, cal=f.getAttribute('data-cal')==='1';
+    var lbl = cal ? 'Registrar pedido Cálidda' : 'Enviar voucher';
     err.hidden=true;
-    if (!op){ err.textContent='Ingresa el número de operación.'; err.hidden=false; return; }
-    if (!file){ err.textContent='Adjunta la foto o el PDF del voucher.'; err.hidden=false; return; }
+    if (!op){ err.textContent=cal?'Ingresa el N° de pedido Cálidda.':'Ingresa el número de operación.'; err.hidden=false; return; }
+    if (!file){ err.textContent=cal?'Adjunta la captura del pedido Cálidda.':'Adjunta la foto o el PDF del voucher.'; err.hidden=false; return; }
+    var extra = cal ? { fecha: f.elements.fecha.value, estado: f.elements.estado.value } : null;
+    if (cal && !extra.fecha){ err.textContent='Indica la fecha de venta que figura en Cálidda.'; err.hidden=false; return; }
     if (file.size > 5*1024*1024){ err.textContent='El archivo supera 5 MB.'; err.hidden=false; return; }
     if (!/^image\/|^application\/pdf$/.test(file.type)){ err.textContent='Sube una imagen o un PDF.'; err.hidden=false; return; }
     var num=f.getAttribute('data-num'), doc=f.getAttribute('data-doc');
-    state.uploading=true; $('vGo').textContent='Enviando voucher…'; $('vGo').disabled=true;
+    state.uploading=true; $('vGo').textContent=cal?'Registrando…':'Enviando voucher…'; $('vGo').disabled=true;
     var rd=new FileReader();
     rd.onload=function(){
       var b64=String(rd.result).split(',')[1];
-      var fin=function(r){ state.uploading=false; $('vGo').disabled=false; $('vGo').textContent='Enviar voucher';
-        if (r && r.ok){ ok.textContent='Recibimos tu voucher del pedido '+num+'. Tesorería validará el abono y te confirmaremos el pago.'; ok.hidden=false; f.elements.archivo.value='';
-          if (state.payQuery && state.payQuery.res) state.payQuery.res.estado='Voucher recibido'; }
+      var fin=function(r){ state.uploading=false; $('vGo').disabled=false; $('vGo').textContent=lbl;
+        if (r && r.ok){ ok.textContent=cal?'Pedido Cálidda N° '+op+' registrado. El pedido '+num+' quedó confirmado para la entrega.':'Recibimos tu voucher del pedido '+num+'. Tesorería validará el abono y te confirmaremos el pago.'; ok.hidden=false; f.elements.archivo.value='';
+          if (cal) $('vGo').disabled=true;
+          if (state.payQuery && state.payQuery.res) state.payQuery.res.estado=cal?'Pagado':'Voucher recibido'; }
         else { err.textContent=(r&&r.error)||'No pudimos subir el voucher.'; err.hidden=false; } };
       if (live) runner().withSuccessHandler(fin).withFailureHandler(function(){ fin({ok:false,error:'Se perdió la conexión. Inténtalo de nuevo.'}); })
-        .subirVoucher(num, doc, medio, op, {nombre:file.name, tipo:file.type, base64:b64});
-      else setTimeout(function(){ var d=state.demoOrders[num]; if(d) d.estado='Voucher recibido'; fin({ok:true}); }, 400);
+        .subirVoucher(num, doc, medio, op, {nombre:file.name, tipo:file.type, base64:b64}, extra);
+      else setTimeout(function(){ var d=state.demoOrders[num]; if(d) d.estado=cal?'Pagado':'Voucher recibido'; fin({ok:true}); }, 400);
     };
     rd.onerror=function(){ state.uploading=false; err.textContent='No se pudo leer el archivo.'; err.hidden=false; };
     rd.readAsDataURL(file);
@@ -689,7 +901,9 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     } else if (window.OUTLET_DEMO){ setData(window.OUTLET_DEMO); }
   }
   loadCart(); load();
-  if (live) setInterval(function(){ if (!state.sending) runner().withSuccessHandler(function(d){ setData(d); }).getCatalogo(opts()); }, 90000);
+  // Stock en tiempo real: cada 30 s para supervisores, cada 90 s para el público
+  var tick=0;
+  if (live) setInterval(function(){ tick++; if (state.sending || (!state.sup && tick%3)) return; runner().withSuccessHandler(function(d){ setData(d); }).getCatalogo(opts()); }, 30000);
 })();
 </script>
 
