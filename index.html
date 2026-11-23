@@ -264,7 +264,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     var ok=function(){}, ko=function(){}, o={
       withSuccessHandler:function(f){ ok=f; return o; },
       withFailureHandler:function(f){ ko=f; return o; } };
-    ['getCatalogo','registrarPedido','subirVoucher','consultarPedido','loginSupervisor','supCambiarClave','supVentas','supSalir','supRegistrar'].forEach(function(fn){
+    ['getCatalogo','registrarPedido','subirVoucher','consultarPedido','loginSupervisor','supCambiarClave','supVentas','supSalir','supRegistrar','supLeerCapturas'].forEach(function(fn){
       o[fn]=function(){
         var args=[].slice.call(arguments);
         fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args})})
@@ -645,6 +645,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     if (!live){ ok({ok:false,error:'Disponible solo en la tienda publicada.'}); return; }
     var r = runner().withSuccessHandler(function(x){ ok(x); }).withFailureHandler(function(e){ var m=String(e&&e.message||e);
       if (m.indexOf('SESION:')>=0){ supFin(); ok({ok:false,error:'Tu sesión expiró. Vuelve a ingresar.'}); } else ok({ok:false,error:m}); });
+    if (typeof r[fn] !== 'function'){ ok({ok:false,error:'Función no disponible ('+fn+'). Actualiza la página con Ctrl+F5.'}); return; }
     r[fn].apply(r, args);
   }
   function supFin(){ state.sup=null; state.supVentas=null; try{ sessionStorage.removeItem('merpesOutletSup'); }catch(e){} render(); }
@@ -803,8 +804,12 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     if (!a && !b){ F.avisos=['Sube al menos una captura (lo ideal son las dos).']; renderCart(); return; }
     if ((a&&a.size>8*1024*1024)||(b&&b.size>8*1024*1024)){ F.avisos=['Cada captura debe pesar menos de 8 MB.']; renderCart(); return; }
     F.leyendo=true; F.avisos=[]; renderCart();
+    var vencido=false, timer=setTimeout(function(){ if (!F.leyendo) return; vencido=true; F.leyendo=false; F.modo='manual';
+      F.avisos=['La lectura de las capturas está demorando demasiado. Pasamos al llenado manual: completa los datos y adjunta la captura.'];
+      if (F.caps && F.caps.cap1 && !F.caps.capx) F.caps.capx=F.caps.cap1; renderCart(); }, 75000);
     prepArchivo(a, function(fa){ prepArchivo(b, function(fb){
       supCall('supLeerCapturas',[state.sup.token,[fa,fb].filter(Boolean)], function(r){
+        clearTimeout(timer); if (vencido) return;
         F.leyendo=false;
         if (!r || !r.ok){ F.avisos=[(r&&r.error)||'No se pudo leer la captura. Usa el llenado manual.']; renderCart(); return; }
         var c=r.campos, map={calNum:'calNum',fecha:'fecha',estado:'estado',importe:'importe',nombre:'cliente',documento:'dni',telefono:'telefono',contrato:'contrato',despacho:'despacho',asesor:'asesor'};
