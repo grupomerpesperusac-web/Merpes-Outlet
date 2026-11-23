@@ -652,7 +652,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       $('dTitle').textContent='Supervisor Cálidda';
       var v = state.supVentas;
       body.innerHTML = '<p class="lm">Hola <b>'+esc(state.sup.nombre)+'</b>. Para registrar una venta agrega los productos al carrito y pulsa "Continuar".</p><h4 style="margin:12px 0 6px">Mis ventas registradas</h4>'+
-        (v==null?'<div class="lm">Cargando…</div>':(v.length?v.map(function(x){ return '<div class="line" style="grid-template-columns:1fr auto"><div><div class="ln">'+esc(x.numero)+' · Cálidda '+esc(x.cal)+'</div><div class="lm">'+esc(x.fecha)+' · '+esc(x.cliente)+' · '+esc(x.estado)+'</div></div><div class="lr">'+fmt(x.total)+(x.captura?'<a class="lm" href="'+esc(x.captura)+'" target="_blank" rel="noopener">Captura</a>':'')+'</div></div>'; }).join(''):'<div class="empty">Aún no registras ventas.</div>'));
+        (v==null?'<div class="lm">Cargando…</div>':(v.length?v.map(function(x){ return '<div class="line" style="grid-template-columns:1fr auto"><div><div class="ln">'+esc(x.numero)+' · Cálidda '+esc(x.cal)+'</div><div class="lm">'+esc(x.fecha)+' · '+esc(x.cliente)+(x.asesor?' · Asesor: '+esc(x.asesor):'')+' · '+esc(x.estado)+'</div></div><div class="lr">'+fmt(x.total)+(x.captura?'<a class="lm" href="'+esc(x.captura)+'" target="_blank" rel="noopener">Captura</a>':'')+'</div></div>'; }).join(''):'<div class="empty">Aún no registras ventas.</div>'));
       foot.innerHTML = '<button class="btn primary" type="button" id="supNew">Registrar venta</button><button class="btn" type="button" id="supOut">Cerrar sesión</button>';
       $('supNew').onclick = function(){ state.view='checkout'; renderCart(); };
       $('supOut').onclick = function(){ var t=state.sup.token; supFin(); supCall('supSalir',[t],function(){}); closeCart(); toast('Sesión cerrada'); };
@@ -780,7 +780,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       cliente: { nombre: String(F.nombre||'').trim(), documento: String(F.documento||'').trim(), telefono: String(F.telefono||'').trim(), contrato: String(F.contrato||'').trim(), direccion: String(F.direccion||'').trim() } };
     var falta=[]; if(!d.calNum) falta.push('N° de pedido'); if(!d.fechaVenta) falta.push('fecha de venta'); if(!(d.importe>0)) falta.push('importe');
     if(!d.cliente.nombre) falta.push('cliente'); if(!d.cliente.documento) falta.push('DNI'); if(d.cliente.telefono.replace(/\D/g,'').length<9) falta.push('teléfono (9 dígitos)');
-    if(d.despacho==='Delivery a domicilio' && !d.cliente.direccion) falta.push('dirección');
+    if(d.despacho==='Delivery a domicilio' && !d.cliente.direccion) falta.push('dirección'); if(!d.asesor) falta.push('asesor (vendedor)');
     if (falta.length){ er.textContent='Completa: '+falta.join(', ')+'.'; er.hidden=false; return; }
     if (F.modo==='manual' && !fx && !F.lecturaId && !confirm('Vas a registrar la venta sin captura. Logística la revisará antes del despacho. ¿Continuar?')) return;
     er.hidden=true; state.sending=true; $('svGo').disabled=true; $('svGo').textContent='Registrando…';
