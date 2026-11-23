@@ -751,9 +751,9 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     body.innerHTML =
       '<div class="seg2"><button type="button" data-m="leer" aria-pressed="'+(F.modo==='leer')+'">Leer capturas</button><button type="button" data-m="manual" aria-pressed="'+(F.modo==='manual')+'">Llenado manual</button></div>'+
       (F.modo==='leer' ?
-        '<div class="pay"><h4>1. Sube las capturas de la plataforma Cálidda</h4><p class="lm">La web lee el N° de pedido, cliente, DNI, fecha, importe, estado y productos. Luego revisas y registras.</p>'+
+        '<div class="pay"><h4>1. Sube las capturas de la plataforma Cálidda</h4><p class="lm">Basta con la captura del detalle: la web lee el N° de pedido, cliente, DNI, fecha, importe, vendedor y productos. Si agregas la fila de la lista, también lee el estado.</p>'+
         dropZone('cap1','Detalle del pedido ("Ver Financiamiento" con productos)')+
-        dropZone('cap2','Fila de la lista de pedidos (con el Estado)')+
+        dropZone('cap2','Fila de la lista de pedidos con el Estado (opcional, recomendada)')+
         '<button class="btn primary" type="button" id="leer"'+(F.leyendo?' disabled':'')+'>'+(F.leyendo?'Leyendo capturas…':'Leer capturas')+'</button></div>'
         : '<p class="lm">Llenado manual: úsalo si no tienes la captura o salió borrosa. Agrega los productos desde el catálogo y completa los datos. Las ventas sin captura se revisan antes del despacho.</p>')+
       (F.avisos && F.avisos.length ? '<div class="avisos">'+F.avisos.map(function(a){ return '<div>• '+esc(a)+'</div>'; }).join('')+'</div>' : '')+
