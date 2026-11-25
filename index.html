@@ -190,6 +190,60 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
 }
 @media (max-width:400px){.logo b{font-size:17px}.logo span{display:none}}
 @media (prefers-reduced-motion:no-preference){.card{transition:box-shadow .15s}.card:hover{box-shadow:var(--shadow)}}
+/* Seguimiento de pedidos (tipo courier) */
+.tk-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.tk-chip{border:1px solid var(--line,#d9dfea);background:var(--surface,#fff);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink,#14203a)}
+.tk-chip b{margin-left:4px}
+.tk-chip[aria-pressed="true"]{background:var(--brand,#002060);border-color:var(--brand,#002060);color:#fff}
+.tk-chip.al{border-color:#e7a29a}.tk-chip.al[aria-pressed="true"]{background:#c42b1c;border-color:#c42b1c}
+.tk-q{width:100%;max-width:420px;padding:9px 12px;border:1px solid var(--line,#d9dfea);border-radius:8px;font:inherit;margin-bottom:12px}
+.tk-list{display:grid;gap:10px}
+.tk-card{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:var(--surface,#fff);border:1px solid var(--line,#d9dfea);border-radius:10px;padding:12px 14px;cursor:pointer}
+.tk-card:hover{border-color:var(--brand,#002060)}
+.tk-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.tk-n{font-weight:700}.tk-m{font-size:13px;color:var(--muted,#5d6b85)}
+.tk-b{display:inline-block;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;white-space:nowrap;background:#e7ecf5;color:#14203a}
+.tk-b.ok{background:#dcf2e5;color:#0f7a43}.tk-b.al{background:#fbe1de;color:#a3241a}.tk-b.an{background:#eceff3;color:#5d6b85;text-decoration:line-through}.tk-b.go{background:#fff1cc;color:#6b4a00}
+.tk-bar{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:10px}
+.tk-bar i{height:6px;border-radius:3px;background:#e3e8f0}
+.tk-bar i.ok{background:#0f7a43}.tk-bar i.actual{background:#f2a900}.tk-bar i.alerta{background:#c42b1c}.tk-bar i.anulado{background:#b8c0cc}
+.tk-lbl{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;font-size:10.5px;color:var(--muted,#5d6b85);margin-top:3px;line-height:1.15}
+.tk-det{background:var(--surface,#fff);border:1px solid var(--line,#d9dfea);border-radius:10px;padding:16px}
+.tk-back{font:inherit;background:none;border:0;color:var(--brand,#002060);cursor:pointer;padding:0;margin-bottom:10px;font-weight:700}
+.tk-tl{list-style:none;margin:16px 0 0;padding:0}
+.tk-tl li{position:relative;padding:0 0 18px 34px}
+.tk-tl li:before{content:"";position:absolute;left:11px;top:22px;bottom:0;width:2px;background:#e3e8f0}
+.tk-tl li:last-child:before{display:none}
+.tk-tl li.ok:before{background:#0f7a43}
+.tk-dot{position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:#e3e8f0;color:#5d6b85}
+.ok>.tk-dot{background:#0f7a43;color:#fff}.actual>.tk-dot{background:#f2a900;color:#2a1d00;box-shadow:0 0 0 4px #fff1cc}
+.alerta>.tk-dot{background:#c42b1c;color:#fff;box-shadow:0 0 0 4px #fbe1de}.anulado>.tk-dot{background:#b8c0cc;color:#fff}
+.tk-tt{font-weight:700}.tk-tl .pendiente .tk-tt{color:var(--muted,#5d6b85);font-weight:600}
+.tk-dd{font-size:13px;margin-top:3px;color:var(--ink,#14203a)}
+.tk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 18px;margin-top:10px;font-size:13px}
+.tk-grid span{display:block;color:var(--muted,#5d6b85);font-size:11.5px;text-transform:uppercase;letter-spacing:.03em}
+.tk-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}.tk-tbl td,.tk-tbl th{padding:6px 8px;border-bottom:1px solid var(--line,#d9dfea);text-align:left}
+.tk-h{font-size:15px;margin:18px 0 4px}
+.tk-kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:0 0 14px}
+.tk-kp div{background:var(--surface,#fff);border:1px solid var(--line,#d9dfea);border-radius:10px;padding:10px 12px}.tk-kp b{display:block;font-size:20px}.tk-kp span{font-size:12px;color:var(--muted,#5d6b85)}
+.tk-rk{background:var(--surface,#fff);border:1px solid var(--line,#d9dfea);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.tk-rk h4{margin:0 0 8px;font-size:15px}
+.tk-row{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;font-size:13px;padding:5px 0}
+.tk-row .p{grid-column:2/4;height:7px;background:#e7ecf5;border-radius:4px;margin-top:-2px}.tk-row .p i{display:block;height:7px;border-radius:4px;background:var(--brand,#002060)}
+.tk-row .r{font-weight:700;color:var(--muted,#5d6b85)}.tk-row:nth-child(2) .r{color:#b8860b}
+.sp-ov{position:fixed;inset:0;z-index:90;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch}
+.sp-hd{position:sticky;top:0;z-index:2;background:var(--brand);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.sp-in{max-width:1000px;margin:0 auto;padding:12px 16px}
+.sp-hd .sp-in{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:0}
+.sp-hd h2{font-family:var(--f-display);font-size:22px;margin:0;flex:1;min-width:180px}
+.sp-x{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:8px;padding:8px 12px;font:inherit;cursor:pointer}
+.sp-tabs{display:flex;gap:4px;width:100%;margin-top:8px}
+.sp-tabs button{background:none;border:0;color:rgba(255,255,255,.8);font:inherit;font-weight:700;padding:10px 14px;border-bottom:3px solid transparent;cursor:pointer}
+.sp-tabs button[aria-selected="true"]{color:#fff;border-bottom-color:var(--accent)}
+.sp-rg{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:14px}
+.sp-rg label{font-size:12px;color:var(--muted);display:grid;gap:3px}
+.sp-rg input{padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit}
+.sp-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0 12px}
 </style>
 
 <header class="top">
@@ -266,7 +320,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     var ok=function(){}, ko=function(){}, o={
       withSuccessHandler:function(f){ ok=f; return o; },
       withFailureHandler:function(f){ ko=f; return o; } };
-    ['getCatalogo','registrarPedido','subirVoucher','consultarPedido','loginSupervisor','supCambiarClave','supVentas','supSalir','supRegistrar','supLeerCapturas'].forEach(function(fn){
+    ['getCatalogo','registrarPedido','subirVoucher','consultarPedido','loginSupervisor','supCambiarClave','supVentas','supSalir','supRegistrar','supLeerCapturas','supSeguimiento','supEstadisticas'].forEach(function(fn){
       o[fn]=function(){
         var args=[].slice.call(arguments);
         fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args})})
@@ -652,16 +706,19 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     if (typeof r[fn] !== 'function'){ ok({ok:false,error:'Función no disponible ('+fn+'). Actualiza la página con Ctrl+F5.'}); return; }
     r[fn].apply(r, args);
   }
-  function supFin(){ state.sup=null; state.supVentas=null; try{ sessionStorage.removeItem('merpesOutletSup'); }catch(e){} render(); }
+  function supFin(){ spCerrar(); state.sp=null; state.sup=null; state.supVentas=null; try{ sessionStorage.removeItem('merpesOutletSup'); }catch(e){} render(); }
   function supCargarVentas(){ supCall('supVentas', [state.sup.token], function(r){ if (r && r.ok){ state.supVentas=r.ventas; if (state.view==='sup') renderCart(); } }); }
   function renderSup(){
     var body=$('dBody'), foot=$('dFoot');
     if (state.sup && !state.sup.debeCambiar){
       $('dTitle').textContent='Supervisor Cálidda';
       var v = state.supVentas;
-      body.innerHTML = '<p class="lm">Hola <b>'+esc(state.sup.nombre)+'</b>. Para registrar una venta agrega los productos al carrito y pulsa "Continuar".</p><h4 style="margin:12px 0 6px">Mis ventas registradas</h4>'+
+      body.innerHTML = '<p class="lm">Hola <b>'+esc(state.sup.nombre)+'</b>. Para registrar una venta agrega los productos al carrito y pulsa "Continuar".</p>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0"><button class="btn primary" type="button" id="supTrk">Seguimiento de pedidos</button><button class="btn" type="button" id="supEst">Mis estadísticas</button></div><h4 style="margin:12px 0 6px">Mis ventas registradas</h4>'+
         (v==null?'<div class="lm">Cargando…</div>':(v.length?v.map(function(x){ return '<div class="line" style="grid-template-columns:1fr auto"><div><div class="ln">'+esc(x.numero)+' · Cálidda '+esc(x.cal)+'</div><div class="lm">'+esc(x.fecha)+' · '+esc(x.cliente)+(x.asesor?' · Asesor: '+esc(x.asesor):'')+' · '+esc(x.estado)+'</div></div><div class="lr">'+fmt(x.total)+(x.captura?'<a class="lm" href="'+esc(x.captura)+'" target="_blank" rel="noopener">Captura</a>':'')+'</div></div>'; }).join(''):'<div class="empty">Aún no registras ventas.</div>'));
       foot.innerHTML = '<button class="btn primary" type="button" id="supNew">Registrar venta</button><button class="btn" type="button" id="supOut">Cerrar sesión</button>';
+      $('supTrk').onclick = function(){ spOpen('seg'); };
+      $('supEst').onclick = function(){ spOpen('est'); };
       $('supNew').onclick = function(){ state.view='checkout'; renderCart(); };
       $('supOut').onclick = function(){ var t=state.sup.token; supFin(); supCall('supSalir',[t],function(){}); closeCart(); toast('Sesión cerrada'); };
       return;
@@ -699,6 +756,104 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
         if (!r.debeCambiar){ try{ sessionStorage.setItem('merpesOutletSup', JSON.stringify(state.sup)); }catch(x){} }
         state.cart={}; saveCart(); state.cond='Liquidación'; render(); renderCart(); if (!r.debeCambiar){ toast('Bienvenido, '+String(r.nombre).split(' ')[0]); supCargarVentas(); } }); });
   }
+  // ── Seguimiento de pedidos tipo courier (compartido tienda / panel) ──
+  var TK = { f:'todos', q:'', sel:null };
+  var TK_CAT = [['todos','Todos'],['proc','En proceso'],['prog','Programados'],['ruta','En ruta'],['ent','Entregados'],['al','Con alerta'],['anu','Anulados']];
+  var TK_CORTO = ['Venta','Carga SIG','Stock','Confirmación','GR y ruta','Entrega'];
+  function tkCat(t){ if (t.anulado) return 'anu'; if (t.entregado) return 'ent'; if (t.estadoSig==='ENTRANSITO'||t.estadoSig==='FACTURADO') return 'ruta'; if (t.estadoSig==='PROGRAMADO') return 'prog'; return 'proc'; }
+  function tkBadge(t){ var c = t.anulado?'an':t.entregado?'ok':t.alerta?'al':(t.estadoSig==='ENTRANSITO'||t.estadoSig==='FACTURADO')?'go':''; return '<span class="tk-b '+c+'">'+esc(t.resumen)+'</span>'; }
+  function tkHtml(d, conSup){
+    var L = (d && d.pedidos) || [];
+    if (TK.sel){ var t = L.filter(function(x){ return x.numero===TK.sel; })[0]; if (t) return tkDetalle(t, conSup); TK.sel=null; }
+    var cnt = {}; TK_CAT.forEach(function(c){ cnt[c[0]]=0; });
+    L.forEach(function(t){ cnt.todos++; cnt[tkCat(t)]++; if (t.alerta && !t.anulado && !t.entregado) cnt.al++; });
+    var q = TK.q.toLowerCase();
+    var F = L.filter(function(t){
+      if (TK.f==='al' ? !(t.alerta && !t.anulado && !t.entregado) : (TK.f!=='todos' && tkCat(t)!==TK.f)) return false;
+      return !q || [t.cal,t.numero,t.cliente,t.doc,t.vend,t.sup,t.distrito].join(' ').toLowerCase().indexOf(q)>=0; });
+    return '<div class="tk-chips">'+TK_CAT.map(function(c){ return '<button type="button" class="tk-chip'+(c[0]==='al'?' al':'')+'" data-tkf="'+c[0]+'" aria-pressed="'+(TK.f===c[0])+'">'+c[1]+'<b>'+cnt[c[0]]+'</b></button>'; }).join('')+'</div>'+
+      '<input class="tk-q" id="tkQ" type="search" placeholder="Buscar por N° de pedido, cliente, DNI, vendedor o distrito" value="'+esc(TK.q)+'">'+
+      '<p class="tk-m" style="margin:-4px 0 10px">'+(d && d.actualizado ? 'Estados del SIG actualizados al '+esc(d.actualizado)+'. ' : 'Aún no se sincronizan los reportes del SIG. ')+'Pulsa un pedido para ver su recorrido.</p>'+
+      (F.length ? '<div class="tk-list">'+F.map(function(t){
+        return '<button type="button" class="tk-card" data-tk="'+esc(t.numero)+'"><div class="tk-top"><div><div class="tk-n">Pedido Cálidda '+esc(t.cal)+' <span class="tk-m">· '+esc(t.numero)+'</span></div>'+
+          '<div class="tk-m">'+esc(t.fecha)+' · '+esc(t.cliente)+(t.vend?' · Vendedor: '+esc(t.vend):'')+(conSup&&t.sup?' · Sup.: '+esc(t.sup):'')+(t.canal?' · '+esc(t.canal):'')+'</div></div>'+
+          '<div style="text-align:right">'+tkBadge(t)+'<div class="tk-m" style="margin-top:4px">'+fmt(t.total)+'</div></div></div>'+
+          '<div class="tk-bar">'+t.etapas.map(function(e){ return '<i class="'+e.estado+'" title="'+esc(e.titulo)+'"></i>'; }).join('')+'</div>'+
+          '<div class="tk-lbl">'+TK_CORTO.map(function(x){ return '<span>'+x+'</span>'; }).join('')+'</div></button>'; }).join('')+'</div>'
+        : '<div class="tk-m" style="padding:20px 0">No hay pedidos en esta vista.</div>');
+  }
+  function tkDetalle(t, conSup){
+    var ico = { ok:'✓', alerta:'!', anulado:'×' };
+    return '<div class="tk-det"><button type="button" class="tk-back" data-tkback="1">← Volver a la lista</button>'+
+      '<div class="tk-top"><div><div class="tk-n" style="font-size:18px">Pedido Cálidda '+esc(t.cal)+'</div><div class="tk-m">Pedido web '+esc(t.numero)+' · registrado el '+esc(t.fecha)+'</div></div>'+tkBadge(t)+'</div>'+
+      '<div class="tk-grid"><div><span>Cliente</span>'+esc(t.cliente)+(t.doc?' · '+esc(t.doc):'')+'</div><div><span>Teléfono</span>'+esc(t.tel||'—')+'</div>'+
+        '<div><span>Dirección</span>'+esc(t.direccion||'—')+(t.distrito?' · '+esc(t.distrito):'')+'</div><div><span>Vendedor</span>'+esc(t.vend||'—')+'</div>'+
+        (conSup?'<div><span>Supervisor</span>'+esc(t.sup||'—')+'</div>':'')+'<div><span>Canal (SIG)</span>'+esc(t.canal||'—')+'</div><div><span>Importe</span>'+fmt(t.total)+'</div><div><span>Estado SIG</span>'+esc(t.estadoSig||'Sin cargar')+'</div></div>'+
+      '<ol class="tk-tl">'+t.etapas.map(function(e){ return '<li class="'+e.estado+'"><span class="tk-dot">'+(ico[e.estado]||e.n)+'</span><div class="tk-tt">'+esc(e.titulo)+(e.fecha?' <span class="tk-m" style="font-weight:400">· '+esc(e.fecha)+'</span>':'')+'</div>'+
+        e.detalle.map(function(x){ return '<div class="tk-dd">'+esc(x)+'</div>'; }).join('')+'</li>'; }).join('')+'</ol>'+
+      (t.productos && t.productos.length ? '<h4 class="tk-h">Productos</h4><table class="tk-tbl"><thead><tr><th>SKU</th><th>Producto</th><th style="text-align:right">Und.</th></tr></thead><tbody>'+t.productos.map(function(p){ return '<tr><td>'+esc(p.sku)+'</td><td>'+esc(p.desc)+'</td><td style="text-align:right">'+esc(p.und)+'</td></tr>'; }).join('')+'</tbody></table>' : '')+
+      (t.documentos && t.documentos.length ? '<h4 class="tk-h">Documentos</h4><table class="tk-tbl"><tbody>'+t.documentos.map(function(x){ return '<tr><td>'+esc(x.tipo)+'</td><td>'+esc(x.numero)+'</td><td>'+esc(x.fecha)+'</td></tr>'; }).join('')+'</tbody></table>' : '')+
+    '</div>';
+  }
+  function tkBind(root, rerender){
+    root.querySelectorAll('[data-tkf]').forEach(function(b){ b.onclick=function(){ TK.f=b.dataset.tkf; rerender(); }; });
+    root.querySelectorAll('[data-tk]').forEach(function(b){ b.onclick=function(){ TK.sel=b.dataset.tk; rerender(); root.scrollIntoView && root.scrollIntoView({block:'start'}); }; });
+    var bk=root.querySelector('[data-tkback]'); if (bk) bk.onclick=function(){ TK.sel=null; rerender(); };
+    var q=root.querySelector('#tkQ'); if (q) q.oninput=function(){ TK.q=q.value; var p=q.selectionStart; rerender(); var n=root.querySelector('#tkQ'); if(n){ n.focus(); try{ n.setSelectionRange(p,p); }catch(e){} } };
+  }
+  // Ranking con barras (estadísticas del supervisor)
+  function tkRank(titulo, l, nota){
+    if (!l || !l.length) return '<div class="tk-rk"><h4>'+esc(titulo)+'</h4><div class="tk-m">Sin ventas en el periodo.</div></div>';
+    var mx = Math.max.apply(null, l.map(function(x){ return x.monto; })) || 1, tot = l.reduce(function(a,x){ return a+x.monto; },0) || 1;
+    return '<div class="tk-rk"><h4>'+esc(titulo)+'</h4>'+(nota?'<div class="tk-m" style="margin:-4px 0 6px">'+esc(nota)+'</div>':'')+l.map(function(x,i){
+      return '<div class="tk-row"><span class="r">'+(i+1)+'</span><span>'+esc(x.nombre)+' <span class="tk-m">· '+x.pedidos+' ped. · '+x.unidades+' und.</span></span><b>'+fmt(x.monto)+' <span class="tk-m">'+(x.monto/tot*100).toFixed(0)+'%</span></b>'+
+        '<span class="p"><i style="width:'+(x.monto/mx*100).toFixed(1)+'%"></i></span></div>'; }).join('')+'</div>';
+  }
+  // ── Panel del supervisor: seguimiento de pedidos y estadísticas propias ──
+  function spOpen(tab){
+    if (!state.sup) return;
+    var h=new Date(); state.sp = state.sp || { desde: hoyISO(new Date(h.getFullYear(),h.getMonth(),1)), hasta: hoyISO(h) };
+    state.sp.tab = tab; TK.sel=null;
+    var ov=$('spOv');
+    if (!ov){ ov=document.createElement('div'); ov.id='spOv'; ov.className='sp-ov'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); document.body.appendChild(ov); }
+    ov.hidden=false; document.body.style.overflow='hidden'; closeCart();
+    spRender(); if (tab==='seg') spSeg(); else spEst();
+  }
+  function spCerrar(){ var ov=$('spOv'); if (ov) ov.hidden=true; document.body.style.overflow=''; }
+  function spSeg(){ state.sp.seg=null; spRender(); supCall('supSeguimiento',[state.sup.token], function(r){ if(!state.sp) return; state.sp.seg = r && r.ok ? r.datos : { error:(r&&r.error)||'No se pudo cargar.' }; spRender(); }); }
+  function spEst(){ state.sp.est=null; spRender(); supCall('supEstadisticas',[state.sup.token, state.sp.desde, state.sp.hasta], function(r){ if(!state.sp) return; state.sp.est = r && r.ok ? r.datos : { error:(r&&r.error)||'No se pudo cargar.' }; spRender(); }); }
+  function spRender(){
+    var ov=$('spOv'); if (!ov || ov.hidden || !state.sp) return;
+    var sp=state.sp, body='';
+    if (sp.tab==='seg'){
+      body = sp.seg==null ? '<div class="tk-m" style="padding:30px 0">Cargando tus pedidos…</div>' : sp.seg.error ? '<div class="err">'+esc(sp.seg.error)+'</div>' : tkHtml(sp.seg, false);
+    } else {
+      var d=sp.est;
+      body = '<div class="sp-rg"><label>Desde<input type="date" id="spD" value="'+esc(sp.desde)+'"></label><label>Hasta<input type="date" id="spH" value="'+esc(sp.hasta)+'"></label>'+
+        '<button class="btn primary" type="button" id="spGo">Ver</button><button class="btn" type="button" data-rg="hoy">Hoy</button><button class="btn" type="button" data-rg="7">7 días</button><button class="btn" type="button" data-rg="mes">Este mes</button></div>';
+      if (d==null) body += '<div class="tk-m" style="padding:30px 0">Calculando…</div>';
+      else if (d.error) body += '<div class="err">'+esc(d.error)+'</div>';
+      else { var k=d.kpi;
+        body += '<div class="tk-kp"><div><b>'+k.pedidos+'</b><span>Pedidos</span></div><div><b>'+k.unidades+'</b><span>Unidades</span></div><div><b>'+fmt(k.monto)+'</b><span>Venta total</span></div><div><b>'+fmt(k.ticket)+'</b><span>Ticket promedio</span></div></div>'+
+          '<div class="sp-two"><div>'+tkRank('Ranking de mis vendedores', d.vendedor)+tkRank('Por canal de venta (SIG)', d.canalSig, 'Canal según el SIG; "Sin cargar" = aún no está en el SIG.')+tkRank('Por estado de seguimiento', d.seguimiento)+'</div>'+
+          '<div>'+tkRank('Por categoría', d.categoria)+tkRank('Por línea', d.linea)+tkRank('Productos más vendidos', d.producto)+'</div></div>'+
+          '<p class="tk-m">Incluye todas las ventas que registraste en el periodo (montos con IGV).</p>'; }
+    }
+    ov.innerHTML = '<div class="sp-hd"><div class="sp-in"><h2>'+esc(String(state.sup.nombre||''))+'</h2>'+
+      '<button class="sp-x" type="button" id="spRf">Actualizar</button><button class="sp-x" type="button" id="spCl">Cerrar ✕</button>'+
+      '<div class="sp-tabs" role="tablist"><button role="tab" type="button" data-sp="seg" aria-selected="'+(sp.tab==='seg')+'">Seguimiento de pedidos</button><button role="tab" type="button" data-sp="est" aria-selected="'+(sp.tab==='est')+'">Mis estadísticas</button></div></div></div>'+
+      '<div class="sp-in" id="spBody" style="padding-top:16px">'+body+'</div>';
+    $('spCl').onclick=spCerrar;
+    $('spRf').onclick=function(){ if (sp.tab==='seg') spSeg(); else spEst(); };
+    ov.querySelectorAll('[data-sp]').forEach(function(b){ b.onclick=function(){ sp.tab=b.dataset.sp; TK.sel=null; if (sp.tab==='seg' && !sp.seg) spSeg(); else if (sp.tab==='est' && !sp.est) spEst(); else spRender(); }; });
+    if (sp.tab==='seg') tkBind($('spBody'), spRender);
+    else {
+      var go=$('spGo'); if (go) go.onclick=function(){ sp.desde=$('spD').value; sp.hasta=$('spH').value; spEst(); };
+      ov.querySelectorAll('[data-rg]').forEach(function(b){ b.onclick=function(){ var h=new Date(), r=b.dataset.rg;
+        sp.hasta=hoyISO(h); sp.desde = r==='hoy' ? hoyISO(h) : r==='7' ? hoyISO(new Date(h.getTime()-6*86400000)) : hoyISO(new Date(h.getFullYear(),h.getMonth(),1)); spEst(); }; });
+    }
+  }
+  document.addEventListener('keydown', function(e){ var ov=$('spOv'); if (e.key==='Escape' && ov && !ov.hidden){ if (TK.sel){ TK.sel=null; spRender(); } else spCerrar(); } });
   function hoyISO(d){ d=d||new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); }
   // Formulario de venta Cálidda: "Leer capturas" (llena todo desde las imágenes) o "Llenado manual"
   var SF_CAMPOS = ['calNum','fecha','estado','importe','nombre','documento','telefono','contrato','despacho','direccion','asesor'];
